@@ -16,8 +16,12 @@ bin/
 obj/
 .vs/
 *.suo
+*.user
 *.mdf
 *.ldf
+
+# --- Mapas de código-fonte das bibliotecas de terceiros: só servem para depurar no navegador ---
+*.map
 
 # --- Sistema ---
 .DS_Store
