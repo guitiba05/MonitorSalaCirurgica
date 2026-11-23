@@ -13,8 +13,7 @@ Base: [FIWARE Descomplicado](https://github.com/fabiocabrini/fiware) (Prof. Fáb
 | `fiware-mongo-historical` | `mongo:4.4` | 27017 | séries históricas (com senha) |
 | `fiware-mongo-internal` | `mongo:4.4` | — | contexto do Orion e do IoT Agent (só rede interna) |
 
-> [!IMPORTANT]
-> **O IP público da EC2 muda a cada sessão do Learner Lab.** Não existe IP elástico na conta do laboratório. Por isso o endereço é configurável nos dois lados: `Fiware:Host` no `appsettings.json` (ou tela **Conexão**) e `MQTT_BROKER` no `secrets.h` do firmware. Anote o IP novo no início de cada sessão.
+> **Importante:** O IP público da EC2 muda a cada sessão do Learner Lab. Não existe IP elástico na conta do laboratório. Por isso o endereço é configurável nos dois lados: `Fiware:Host` no `appsettings.json` (ou tela **Conexão**) e `MQTT_BROKER` no `secrets.h` do firmware. Anote o IP novo no início de cada sessão.
 
 ---
 
@@ -26,8 +25,7 @@ Base: [FIWARE Descomplicado](https://github.com/fabiocabrini/fiware) (Prof. Fáb
 4. Clique em **AWS Details** → **SSH Key** → **Download key pair**. Guarde o `vockey.pem` (é a chave do par `vockey`, que já existe na conta).
 5. Deixe a página do laboratório aberta: ela mostra o **tempo restante da sessão** (cerca de 4 h) e os botões **Start/End Lab**.
 
-> [!WARNING]
-> **End Lab** encerra a sessão e libera os recursos. A instância EC2 criada continua existindo, mas fica parada — e o IP público será outro na próxima sessão.
+> **Atenção:** End Lab encerra a sessão e libera os recursos. A instância EC2 criada continua existindo, mas fica parada — e o IP público será outro na próxima sessão.
 
 ## Passo 1 — Criar a instância EC2
 
@@ -101,8 +99,7 @@ docker --version
 docker-compose --version
 ```
 
-> [!NOTE]
-> O pacote `docker-compose` do Ubuntu 22.04 é a **v1.29** (comando `docker-compose`). O `--wait`, citado no Guia dos desenvolvedores, **só existe na v2** (`docker compose`, com espaço). Na v1, suba com `up -d` e confira com `ps`, como nos passos seguintes. Se quiser a v2: `sudo apt install docker-compose-v2` (Ubuntu 24.04) ou instale o plugin oficial.
+> **Nota:** O pacote `docker-compose` do Ubuntu 22.04 é a **v1.29** (comando `docker-compose`). O `--wait`, citado no Guia dos desenvolvedores, **só existe na v2** (`docker compose`, com espaço). Na v1, suba com `up -d` e confira com `ps`, como nos passos seguintes. Se quiser a v2: `sudo apt install docker-compose-v2` (Ubuntu 24.04) ou instale o plugin oficial.
 
 ## Passo 5 — Subir o FIWARE
 
@@ -140,8 +137,7 @@ curl -s http://<IP_PUBLICO>:4041/iot/about
 curl -s http://<IP_PUBLICO>:8666/version
 ```
 
-> [!TIP]
-> Se o `8666/version` responder **404**, não quer dizer que o STH-Comet está fora: algumas versões da imagem não expõem `/version`. Confirme com `sudo docker-compose ps` e com uma consulta real ao histórico (`/STH/v1/...`) antes de concluir que há problema.
+> **Dica:** Se o `8666/version` responder **404**, não quer dizer que o STH-Comet está fora: algumas versões da imagem não expõem `/version`. Confirme com `sudo docker-compose ps` e com uma consulta real ao histórico (`/STH/v1/...`) antes de concluir que há problema.
 
 ## Passo 7 — Provisionar a sala
 
@@ -223,8 +219,7 @@ Os corpos têm de ser os do **contrato** (seção *Contrato* do Guia dos desenvo
 }
 ```
 
-> [!IMPORTANT]
-> **A URL da notificação é a interna do Docker** (`http://sth-comet:8666/notify`), nunca o IP público: quem chama é o Orion, de dentro da EC2. E o formato é **`httpCustom` com JSON NGSIv1**, porque o Orion 4.x não tem mais `attrsFormat: legacy` e o STH-Comet só entende NGSIv1.
+> **Importante:** A URL da notificação é a interna do Docker (`http://sth-comet:8666/notify`), nunca o IP público: quem chama é o Orion, de dentro da EC2. E o formato é **`httpCustom` com JSON NGSIv1**, porque o Orion 4.x não tem mais `attrsFormat: legacy` e o STH-Comet só entende NGSIv1.
 >
 > **Uma inscrição por grandeza.** Inscrição repetida grava cada medida duas vezes no histórico e distorce as médias da supervisão.
 
@@ -305,8 +300,7 @@ sudo docker-compose down      # os volumes são preservados
 
 Depois, na página do laboratório, **End Lab**. Isso encerra a sessão e para a instância.
 
-> [!WARNING]
-> **`docker-compose down` preserva os dados** (volumes). Ele só remove os containers. Para apagar tudo, veja *Master reset*.
+> **Atenção:** `docker-compose down` preserva os dados (volumes). Ele só remove os containers. Para apagar tudo, veja *Master reset*.
 
 ## Master reset
 
@@ -319,8 +313,7 @@ sudo docker volume rm fiware_mongo-historical-data fiware_mongo-internal-data
 sudo docker-compose up -d
 ```
 
-> [!WARNING]
-> Isso apaga **todas** as entidades, inscrições, registros de dispositivo e séries históricas. Depois do reset, provisione a sala de novo (Passo 7).
+> **Atenção:** Isso apaga **todas** as entidades, inscrições, registros de dispositivo e séries históricas. Depois do reset, provisione a sala de novo (Passo 7).
 
 ## Roteiro de cada sessão (cola da equipe)
 

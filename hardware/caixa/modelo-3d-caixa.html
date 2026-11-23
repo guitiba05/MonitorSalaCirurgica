@@ -229,17 +229,21 @@ table{width:100%;border-collapse:collapse;font-size:14px} th,td{text-align:left;
     document.querySelectorAll("[data-alert]").forEach(function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
   }); });
 
-  // ---------- download (recurso de downloads do Claude)
+  // ---------- download do ZIP com os STLs, as instruções e o gerador
   var st = document.getElementById("status");
-  var dlP = (window.claude && window.claude.use) ? window.claude.use("downloads") : Promise.resolve(null);
   document.getElementById("btnDl").addEventListener("click", function(){
     st.textContent = "Preparando o download…"; st.className = "status";
-    dlP.then(function(dl){
-      if (!dl) { st.textContent = "O download não está disponível nesta tela. Abram o link no navegador do computador."; st.className = "status warn"; return; }
-      return dl.save({filename:"caixa-sala-cirurgica-stl.zip", data:new Blob([b64(data.zip)])}).then(function(){
-        st.textContent = "Pronto: caixa-sala-cirurgica-stl.zip foi salvo."; st.className = "status ok";
-      }, function(err){ st.textContent = err && err.code === "declined" ? "Download cancelado." : "Não foi possível baixar (" + ((err && err.code) || "erro") + ")."; st.className = "status warn"; });
-    });
+    try {
+      var blob = new Blob([b64(data.zip)], { type: "application/zip" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = "caixa-sala-cirurgica-stl.zip";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
+      st.textContent = "Pronto: caixa-sala-cirurgica-stl.zip foi salvo na pasta de downloads."; st.className = "status ok";
+    } catch (e) {
+      st.textContent = "Não foi possível gerar o arquivo: " + e.message; st.className = "status warn";
+    }
   });
 
   // ---------- laço
