@@ -2,9 +2,7 @@
 
 Projeto N2 · Sistemas Embarcados (Prof. Fábio Cabrini) e Linguagem de Programação (Prof. Eduardo Rosalém) · Engenharia de Computação · FESA
 
-> **Situação deste README.** Estão prontas as partes do **Analista 1**: aplicação, banco, Alexa e arquitetura.
-> Os trechos marcados com **(Analista 2)** são completados com o firmware, o circuito e a caixa.
-> O deploy na AWS está marcado como **pendente**.
+> **Este documento detalha a frente de servidor.** A documentação principal — objetivo, componentes e pinagem, limites e tabela de alertas, deploy na AWS passo a passo e integrantes — está no [README.md da raiz](../README.md).
 
 ## Objetivo
 
@@ -40,9 +38,16 @@ Fluxo de dados (1 → 6) e de comandos (A → C). A seta parte de quem inicia a 
 
 A aplicação **nunca fala direto com o ESP32**. Detalhes de cada camada em [`docs/arquitetura.md`](docs/arquitetura.md).
 
-## Componentes e pinagem (Analista 2)
+## Componentes e pinagem
 
-*Lista de componentes, pinagem, esquema elétrico, montagem e caixa: seção do Analista 2.*
+A lista de materiais, a pinagem completa, o divisor do LDR e a caixa impressa em 3D estão na seção **Componentes e pinagem** do [README.md da raiz](../README.md). Resumo do que o firmware usa:
+
+| Componente | Pino | Observação |
+| --- | --- | --- |
+| DHT11 (DATA) | GPIO 4 | VCC no 3V3, GND no GND |
+| LDR | GPIO 34 | divisor 3V3 → LDR → GPIO 34 → 10 kΩ → GND |
+| LED RGB | GPIO 25 (R), 26 (G), 27 (B) | só o azul é usado; vermelho e verde ficam apagados |
+| Buzzer passivo | GPIO 13 | resistor de 100 Ω em série |
 
 Os nomes abaixo são o contrato entre firmware, FIWARE e aplicação (Guia dos desenvolvedores). A aplicação depende deles:
 
@@ -164,9 +169,9 @@ O **teste** (botão ou Alexa, 15 s) e o **silêncio** (1 a 30 min) passam na fre
 
 Procedures no padrão do CadAluno: `spInsert_<Tabela>`, `spUpdate_<Tabela>`, `spDelete`, `spConsulta`, `spListagem` e `spProximoId` (genéricas), além de `spListagemLimitesPorPerfil`, `spListagemPerfis`, `spConsultaConfiguracaoPorDevice` e `spConsultaAvancadaAlertas`.
 
-## FIWARE na AWS (pendente)
+## FIWARE na AWS
 
-O FIWARE roda numa EC2 do AWS Learner Lab com o [FIWARE Made Simple](https://github.com/fabiocabrini/fiware-made-simple) (Orion 4.5, IoT Agent UL 3.7, STH-Comet 2.11, Mosquitto, MongoDB). O passo a passo do deploy entra em `docs/deploy-learner-lab.md`.
+O FIWARE roda numa EC2 do AWS Learner Lab com o [FIWARE Descomplicado](https://github.com/fabiocabrini/fiware): Orion 3.11.0, IoT Agent UltraLight, STH-Comet, Mosquitto e dois MongoDB (contexto na rede interna e histórico com senha). O passo a passo completo do deploy, do zero, está em [`docs/deploy-learner-lab.md`](docs/deploy-learner-lab.md).
 
 O que a aplicação precisa da EC2:
 
@@ -207,7 +212,12 @@ Sem hardware, simule uma medida com a requisição 3.1 da coleção do FIWARE Ma
 
 ## Integrantes
 
-| Nome | RA | Papel |
-| --- | --- | --- |
-| *(preencher)* | | Analista 1: aplicação, banco, FIWARE na AWS |
-| *(preencher)* | | Analista 2: firmware, circuito, caixa |
+| Nome | RA |
+| --- | --- |
+| André Felipe Teixeira Gomes | 082240018 |
+| Arthur Marassatto | 082240025 |
+| Danilo Spinola Mota Batista | 082240002 |
+| Enzo Molinari Ferreira | 082240003 |
+| Guilherme Eidi Tiba | 082240026 |
+
+Frentes do Guia dos desenvolvedores: **servidor** (aplicação ASP.NET Core, banco SQL, FIWARE na AWS e diagrama da arquitetura) e **dispositivo** (firmware do ESP32, circuito, montagem e caixa). A lista completa está no [README.md da raiz](../README.md).
