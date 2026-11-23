@@ -135,6 +135,10 @@ Pontos de atenção:
 
 Três peças sem parafusos, PLA: base e tampa em preto, cúpula em branco. Base 116 × 68 × 46 mm; caixa montada com cerca de 103 mm de altura.
 
+![Caixa do Monitor de Sala Cirúrgica girando, com o LED azul piscando nos três padrões de alerta](hardware/caixa/modelo-3d-caixa.webp)
+
+*A caixa montada girando: a animação é renderizada dos próprios STLs e repete os três padrões de alerta do firmware — piscada de 150 ms, 400 ms e 1 s, com 2000, 1000 e 500 Hz no buzzer.*
+
 | Peça | Onde fica o componente | Como prende |
 | --- | --- | --- |
 | DHT11 | janela de 16,5 × 13 mm na lateral esquerda | a placa desce entre duas guias, com o sensor virado para fora; gota de cola quente |
@@ -144,7 +148,9 @@ Três peças sem parafusos, PLA: base e tampa em preto, cúpula em branco. Base 
 | ESP32 | berço interno | apoiado nas colunas, USB na abertura da lateral direita |
 | Mini protoboard | fundo, lado esquerdo | fita dupla-face que vem nela |
 
-Arquivos: [`hardware/caixa/`](hardware/caixa) — três STLs, [`COMO_IMPRIMIR.txt`](hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) com as configurações de fatiamento e a ordem de montagem, o gerador [`gerar_stls_n2.py`](hardware/caixa/caixa-sala-cirurgica-stl/gerar_stls_n2.py) e o [`modelo 3D interativo`](hardware/caixa/modelo-3d-caixa.html), que traz os STLs embutidos e simula o piscar de cada alerta.
+Arquivos: [`hardware/caixa/`](hardware/caixa) — os três STLs, [`COMO_IMPRIMIR.txt`](hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) com as configurações de fatiamento e a ordem de montagem, o gerador paramétrico [`gerar_stls_n2.py`](hardware/caixa/caixa-sala-cirurgica-stl/gerar_stls_n2.py) e o modelo 3D interativo [`modelo-3d-caixa.html`](hardware/caixa/modelo-3d-caixa.html).
+
+**Modelo 3D interativo.** O arquivo `modelo-3d-caixa.html` traz os próprios STLs embutidos em base64, então não precisa instalar nada: girar com o mouse, zoom, alternar **Montada** e **Aberta** (as três peças separadas), vistas prontas (frente, lateral, topo), o nome de cada abertura da caixa, a simulação dos três alertas e um botão que baixa os STLs com as instruções de impressão em `.zip`. Para abrir, clique em [`modelo-3d-caixa.html`](hardware/caixa/modelo-3d-caixa.html) e depois em **Download** (ou baixe o repositório e dê duplo clique no arquivo). O README não consegue rodar esse script — o GitHub remove JavaScript de Markdown —, por isso aqui em cima fica a animação renderizada a partir dos mesmos STLs.
 
 Atende aos requisitos do bônus: caixa que protege o circuito, **sensores expostos**, **LED visível** pela cúpula e **buzzer audível** com a caixa fechada.
 
@@ -363,7 +369,8 @@ O repositório segue a divisão de pastas do Guia dos desenvolvedores: uma pasta
 │       └── README.md                    como gravar, mensagens MQTT e diagnóstico
 └── hardware/
     └── caixa/
-        ├── modelo-3d-caixa.html         modelo 3D interativo: STLs embutidos e simulação dos alertas
+        ├── modelo-3d-caixa.html         modelo 3D interativo: girar, montar/abrir, legendas, alertas
+        ├── modelo-3d-caixa.webp         animação do README, renderizada dos próprios STLs
         └── caixa-sala-cirurgica-stl/    as três peças, COMO_IMPRIMIR.txt e o gerador paramétrico
 ```
 
@@ -380,6 +387,7 @@ Nunca vão para o repositório: `secrets.h` (Wi-Fi e IP), `appsettings.json` (IP
 | [`app/README.md`](app/README.md) | aplicação: telas, endpoints, organização do código e equivalência com o CadAluno |
 | [`firmware/sala_cirurgica/README.md`](firmware/sala_cirurgica/README.md) | firmware: pinagem, como gravar, mensagens MQTT, console de testes e diagnóstico |
 | [`hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt`](hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) | fatiamento das três peças e ordem de montagem da caixa |
+| [`hardware/caixa/modelo-3d-caixa.html`](hardware/caixa/modelo-3d-caixa.html) | modelo 3D interativo da caixa: girar, montar/abrir, legendas dos furos e simulação dos alertas |
 
 ### Código comentado e documentado
 
