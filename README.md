@@ -150,7 +150,9 @@ Três peças sem parafusos, PLA: base e tampa em preto, cúpula em branco. Base 
 
 Arquivos: [`hardware/caixa/`](hardware/caixa) — os três STLs, [`COMO_IMPRIMIR.txt`](hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) com as configurações de fatiamento e a ordem de montagem, o gerador paramétrico [`gerar_stls_n2.py`](hardware/caixa/caixa-sala-cirurgica-stl/gerar_stls_n2.py) e o modelo 3D interativo [`modelo-3d-caixa.html`](hardware/caixa/modelo-3d-caixa.html).
 
-**Modelo 3D interativo.** O arquivo `modelo-3d-caixa.html` traz os próprios STLs embutidos em base64, então não precisa instalar nada: girar com o mouse, zoom, alternar **Montada** e **Aberta** (as três peças separadas), vistas prontas (frente, lateral, topo), o nome de cada abertura da caixa, a simulação dos três alertas e um botão que baixa os STLs com as instruções de impressão em `.zip`. Para abrir, clique em [`modelo-3d-caixa.html`](hardware/caixa/modelo-3d-caixa.html) e depois em **Download** (ou baixe o repositório e dê duplo clique no arquivo). O README não consegue rodar esse script — o GitHub remove JavaScript de Markdown —, por isso aqui em cima fica a animação renderizada a partir dos mesmos STLs.
+**Ver o modelo em 3D, aqui no GitHub.** Clique em [`modelo-3d-caixa.glb`](hardware/caixa/modelo-3d-caixa.glb): o GitHub abre o arquivo num visualizador 3D próprio, com **girar e dar zoom** no mouse, sem instalar nada. É a caixa já montada — base, tampa e cúpula, cerca de 116 × 103 × 68 mm, com os dois materiais (PLA preto e PLA branco). Os STLs soltos também abrem no mesmo visualizador: [`1_base_PRETO.stl`](hardware/caixa/caixa-sala-cirurgica-stl/1_base_PRETO.stl), [`2_tampa_PRETO.stl`](hardware/caixa/caixa-sala-cirurgica-stl/2_tampa_PRETO.stl) e [`3_cupula_BRANCO.stl`](hardware/caixa/caixa-sala-cirurgica-stl/3_cupula_BRANCO.stl).
+
+**Versão completa, no navegador do computador.** O arquivo [`modelo-3d-caixa.html`](hardware/caixa/modelo-3d-caixa.html) vai além do visualizador do GitHub: alterna **Montada** e **Aberta** (as três peças separadas), mostra o nome de cada furo, simula os três alertas com o LED piscando e baixa os STLs com as instruções de impressão em `.zip`. Os STLs estão embutidos em base64, então basta abrir o arquivo no navegador — pelo botão **Download** na página do GitHub, ou com duplo clique depois de baixar o repositório. O README não executa esse script porque o GitHub remove JavaScript de Markdown: por isso, direto na página do repositório, o que funciona é a prévia animada acima e o visualizador do `.glb`.
 
 Atende aos requisitos do bônus: caixa que protege o circuito, **sensores expostos**, **LED visível** pela cúpula e **buzzer audível** com a caixa fechada.
 
@@ -371,6 +373,7 @@ O repositório segue a divisão de pastas do Guia dos desenvolvedores: uma pasta
     └── caixa/
         ├── modelo-3d-caixa.html         modelo 3D interativo: girar, montar/abrir, legendas, alertas
         ├── modelo-3d-caixa.webp         animação do README, renderizada dos próprios STLs
+        ├── modelo-3d-caixa.glb          caixa montada, para o visualizador 3D do GitHub
         └── caixa-sala-cirurgica-stl/    as três peças, COMO_IMPRIMIR.txt e o gerador paramétrico
 ```
 
@@ -388,6 +391,7 @@ Nunca vão para o repositório: `secrets.h` (Wi-Fi e IP), `appsettings.json` (IP
 | [`firmware/sala_cirurgica/README.md`](firmware/sala_cirurgica/README.md) | firmware: pinagem, como gravar, mensagens MQTT, console de testes e diagnóstico |
 | [`hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt`](hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) | fatiamento das três peças e ordem de montagem da caixa |
 | [`hardware/caixa/modelo-3d-caixa.html`](hardware/caixa/modelo-3d-caixa.html) | modelo 3D interativo da caixa: girar, montar/abrir, legendas dos furos e simulação dos alertas |
+| [`hardware/caixa/modelo-3d-caixa.glb`](hardware/caixa/modelo-3d-caixa.glb) | caixa montada em glTF: o GitHub abre num visualizador 3D interativo (girar e zoom) |
 
 ### Código comentado e documentado
 
