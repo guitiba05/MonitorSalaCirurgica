@@ -1,0 +1,85 @@
+COMO IMPRIMIR - CAIXA DO MONITOR DE SALA CIRÚRGICA
+==================================================
+
+Material de todas as peças: PLA
+Suporte: DESLIGADO em todas as peças
+Mesa mínima da impressora: 120 x 120 mm
+Temperaturas: as de costume para PLA na impressora
+
+Ordem recomendada:
+  1) Base
+  2) Tampa
+  3) Cúpula
+
+
+-----------------------------------
+1) BASE  ->  1_base_PRETO.stl
+-----------------------------------
+  Filamento ......... PRETO
+  Posição ........... boca para cima (como abre o arquivo)
+  Camada ............ 0,2 mm
+  Paredes ........... 3
+  Preenchimento ..... 15%
+  Suporte ........... desligado
+  Medidas ........... 116 x 68 x 46 mm
+  O que tem ......... (esquerda e direita de quem olha a FRENTE, o lado
+                      do LDR e do buzzer)
+                      janela do DHT11 (lateral esquerda) com guias por dentro,
+                      grade e anel do buzzer (frente, à direita),
+                      furo do LDR (frente, à esquerda), saída do USB
+                      (lateral direita), ventilação (parede de trás),
+                      recorte para o dedo (frente, no meio)
+
+
+-----------------------------------
+2) TAMPA  ->  2_tampa_PRETO.stl
+-----------------------------------
+  Filamento ......... PRETO
+  Posição ........... face lisa na mesa, anel para cima
+  Camada ............ 0,2 mm
+  Paredes ........... 3
+  Preenchimento ..... 20%
+  Suporte ........... desligado
+  Medidas ........... 111,7 x 63,7 x 10 mm
+
+
+-----------------------------------
+3) CÚPULA  ->  3_cupula_BRANCO.stl
+-----------------------------------
+  Filamento ......... BRANCO
+  Posição ........... boca para baixo, apoiada na borda
+  Camada ............ 0,2 mm
+  Paredes ........... 2
+  Preenchimento ..... 0% (a peça já é uma casca fina)
+  Ventoinha ......... 100%
+  Suporte ........... desligado
+  Modo vaso ......... NÃO USAR (o topo ficaria aberto)
+  Medidas ........... 63,6 x 63,6 x 56,8 mm
+
+
+-----------------------------------
+MONTAGEM
+-----------------------------------
+  1. Mini protoboard de 170 pontos colada no fundo, do lado esquerdo
+     (perto da janela do DHT11).
+  2. ESP32 em cima das colunas do berço, USB virado para a abertura
+     da lateral direita.
+  3. DHT11: deslize a placa do módulo de cima para baixo entre as duas
+     guias da lateral esquerda, com o sensor (a grade) virado para fora,
+     aparecendo pela janela. Uma gota de cola quente segura.
+  4. Buzzer: encaixe por dentro no anel da frente, com a face do som
+     virada para a grade de furos.
+  5. LDR: passe por dentro no furo redondo da frente.
+  6. LED RGB: encaixe por cima no suporte da tampa (as pernas passam pelo
+     furo). Uma gota de cola quente embaixo segura o LED e os fios.
+  7. Tampa: entra no degrau da base e fica nivelada com a borda. Para
+     abrir, puxe pelo recorte em U da frente.
+  8. Cúpula: alinhe as 3 entradas com os 3 dentes do anel, abaixe e gire
+     no sentido ANTI-HORÁRIO (olhando de cima) até parar.
+
+  Antes de imprimir, meça o seu módulo DHT11: a janela tem 16,5 x 13 mm
+  e as guias aceitam uma placa de até 28,5 mm de largura. Se o seu for
+  diferente, ajuste DHT_WIN_W, DHT_WIN_H, DHT_Z e DHT_PCB_W no
+  gerar_stls_n2.py.
+
+  Para carregar a caixa, segure sempre pela BASE.

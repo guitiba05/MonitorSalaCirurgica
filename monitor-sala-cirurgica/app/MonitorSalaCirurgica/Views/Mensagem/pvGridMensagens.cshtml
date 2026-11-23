@@ -1,0 +1,54 @@
+@model PaginaMensagensViewModel
+<div class="card">
+    <div class="card-body pb-2">
+        <div class="d-flex flex-wrap justify-content-between">
+            <h2 class="h5 mb-1">@Model.NomeGrandeza (@Model.Unidade)</h2>
+            <span class="small text-muted">@Model.Total medida(s) · página @Model.Pagina de @Model.Paginas · <code>@Model.Entidade</code></span>
+        </div>
+    </div>
+    <table class="table table-striped table-sm mb-0">
+        <tr>
+            <th class="pl-3">#</th>
+            <th>Recebido em</th>
+            <th>Sala</th>
+            <th>Atributo</th>
+            <th class="text-right pr-3">Valor</th>
+        </tr>
+        @if (Model.Itens.Count == 0)
+        {
+            <tr><td colspan="5" class="text-center text-muted py-4">Nenhuma medida no período. Confira as inscrições do Orion.</td></tr>
+        }
+        @foreach (var m in Model.Itens)
+        {
+            <tr>
+                <td class="pl-3 text-muted">@m.Numero</td>
+                <td>@m.DataHora.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                <td><code>@m.Sala</code></td>
+                <td><code>@m.Atributo</code></td>
+                <td class="text-right pr-3 font-weight-bold">@m.Valor.ToString("0.##") @m.Unidade</td>
+            </tr>
+        }
+    </table>
+    @if (Model.Paginas > 1)
+    {
+        int inicio = Math.Max(1, Model.Pagina - 3), fim = Math.Min(Model.Paginas, Model.Pagina + 3);
+        <nav class="card-body py-2" aria-label="Páginas">
+            <ul class="pagination pagination-sm mb-0 flex-wrap">
+                <li class="page-item @(Model.Pagina <= 1 ? "disabled" : "")"><a class="page-link" href="javascript:aplicaFiltroConsultaAvancada(@(Model.Pagina - 1))">‹</a></li>
+                @if (inicio > 1)
+                {
+                    <li class="page-item"><a class="page-link" href="javascript:aplicaFiltroConsultaAvancada(1)">1</a></li>
+                }
+                @for (int p = inicio; p <= fim; p++)
+                {
+                    <li class="page-item @(p == Model.Pagina ? "active" : "")"><a class="page-link" href="javascript:aplicaFiltroConsultaAvancada(@p)">@p</a></li>
+                }
+                @if (fim < Model.Paginas)
+                {
+                    <li class="page-item"><a class="page-link" href="javascript:aplicaFiltroConsultaAvancada(@Model.Paginas)">@Model.Paginas</a></li>
+                }
+                <li class="page-item @(Model.Pagina >= Model.Paginas ? "disabled" : "")"><a class="page-link" href="javascript:aplicaFiltroConsultaAvancada(@(Model.Pagina + 1))">›</a></li>
+            </ul>
+        </nav>
+    }
+</div>

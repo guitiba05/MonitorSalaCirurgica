@@ -1,0 +1,54 @@
+@model List<LimiteViewModel>
+@{
+    ViewData["Title"] = "Limites";
+    var uso = (Dictionary<string, string>)ViewBag.Uso;
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Limites por perfil</h1>
+        <p class="text-muted mb-0">Faixa aceitável de cada grandeza (tabela <code>Limite</code>). A supervisão compara a <strong>média da janela</strong> com estes valores;
+            a histerese é a margem para o alarme desligar.</p>
+    </div>
+    <a href="/limite/Create" class="btn btn-success">Novo registro</a>
+</div>
+
+@foreach (var perfil in Model.GroupBy(l => l.Perfil))
+{
+    string salas;
+    <div class="card mb-3">
+        <div class="card-body pb-0">
+            <div class="d-flex flex-wrap justify-content-between">
+                <h2 class="h5">@perfil.Key</h2>
+                <span class="small text-muted">@(uso.TryGetValue(perfil.Key, out salas) ? "Em uso: " + salas : "Nenhuma sala usa este perfil")</span>
+            </div>
+        </div>
+        <table class="table table-striped mb-0">
+            <tr><th>Ações</th><th>Código</th><th>Grandeza</th><th>Mínimo</th><th>Máximo</th><th>Histerese</th><th>Alarma quando a média</th></tr>
+            @foreach (var l in perfil.OrderBy(x => Contrato.GrandezasExibicao.FindIndex(g => g.Chave == x.Grandeza)))
+            {
+                var g = l.Info;
+                <tr>
+                    <td class="text-nowrap">
+                        <a href="/limite/edit?id=@l.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                        <a href="javascript:apagarRegistro('limite', @l.Id, 'o limite de @l.Grandeza do perfil @l.Perfil')" class="btn btn-sm btn-outline-danger">Excluir</a>
+                    </td>
+                    <td>@l.Id</td>
+                    <td><span class="chip alerta-@g?.Alerta">@g?.Alerta</span> @g?.Nome</td>
+                    <td>@l.Minimo?.ToString("0.##") @g?.Unidade</td>
+                    <td>@l.Maximo?.ToString("0.##") @g?.Unidade</td>
+                    <td>@l.Histerese?.ToString("0.##") @g?.Unidade</td>
+                    <td class="small text-muted">&lt; @l.Minimo?.ToString("0.##") ou &gt; @l.Maximo?.ToString("0.##"); desliga entre
+                        @((l.Minimo + l.Histerese)?.ToString("0.##")) e @((l.Maximo - l.Histerese)?.ToString("0.##"))</td>
+                </tr>
+            }
+        </table>
+        @if (perfil.Count() < 3)
+        {
+            <div class="card-body py-2 small text-warning">Este perfil não tem as três grandezas: a que falta nunca gera alerta.</div>
+        }
+    </div>
+}
+@if (Model.Count == 0)
+{
+    <div class="card"><div class="card-body text-muted">Nenhum limite cadastrado. Execute o <code>database/script.sql</code> para criar os perfis iniciais.</div></div>
+}

@@ -1,0 +1,65 @@
+@model List<InscricaoViewModel>
+@{
+    ViewData["Title"] = "Inscrições";
+    var salas = (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Salas ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Inscrições do Orion</h1>
+        <p class="text-muted mb-0">Cada inscrição (<code>/v2/subscriptions</code>) faz o Orion avisar o STH-Comet quando uma grandeza muda.
+            Sem elas, o histórico e as médias ficam vazios. Formato da requisição 2.6 (<code>httpCustom</code>).</p>
+    </div>
+    <div class="d-flex flex-wrap">
+        @if (salas.Count > 0)
+        {
+            <form action="/inscricao/CriarPadrao" method="get" class="form-inline mr-2 mb-2">
+                <select name="salaId" asp-items="salas" class="form-control mr-2" aria-label="Sala"></select>
+                <button class="btn btn-outline-primary" type="submit">Criar as 3 da sala</button>
+            </form>
+        }
+        <a href="/inscricao/Create" class="btn btn-success mb-2">Novo registro</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0">
+            <thead>
+                <tr><th>Ações</th><th>Descrição</th><th>Entidade · atributo</th><th>Destino</th><th>Situação</th><th>Notificações</th></tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">Nenhuma inscrição para o fiware-service atual.</td></tr>
+                }
+                @foreach (var i in Model)
+                {
+                    <tr>
+                        <td class="text-nowrap">
+                            <a href="/inscricao/edit?id=@i.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="javascript:apagarRegistro('inscricao', '@i.Id', 'a inscrição de @i.Atributo')" class="btn btn-sm btn-outline-danger">Excluir</a>
+                        </td>
+                        <td>@i.Descricao<div class="small text-muted"><code>@i.Id</code></div></td>
+                        <td class="small"><code>@i.EntidadeId</code><br /><strong>@i.Atributo</strong></td>
+                        <td class="small"><code>@i.Url</code><br /><span class="text-muted">@i.Formato@(i.Throttling > 0 ? $" · mínimo {i.Throttling} s" : "")</span></td>
+                        <td>
+                            <span class="badge @(i.Status == "active" ? "badge-success" : "badge-secondary")">@(i.Status == "active" ? "ativa" : i.Status)</span>
+                            @if (i.ComFalha)
+                            {
+                                <div class="small text-danger mt-1">falhando: @i.MotivoFalha</div>
+                            }
+                        </td>
+                        <td class="small">
+                            @i.VezesEnviada enviadas
+                            @if (i.UltimaNotificacao.HasValue)
+                            {
+                                <div class="text-muted">última @i.UltimaNotificacao.Value.ToString("dd/MM HH:mm:ss")</div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<p class="small text-muted mt-3">A URL <code>http://sth-comet:8666/notify</code> é o endereço do STH-Comet <em>dentro</em> da rede Docker da EC2: quem chama é o Orion, não a aplicação.</p>

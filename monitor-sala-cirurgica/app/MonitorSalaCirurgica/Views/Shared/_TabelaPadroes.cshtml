@@ -1,0 +1,28 @@
+@* Tabela de alertas do contrato: condição → LED azul → buzzer (igual ao firmware e ao README) *@
+<div class="table-responsive">
+    <table class="table table-sm mb-0">
+        <thead>
+            <tr><th>Alerta</th><th class="d-none d-md-table-cell">Condição</th><th>Prioridade</th><th>LED azul</th><th>Buzzer</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Contrato.Padroes)
+            {
+                var g = Contrato.GrandezaPorAlerta(p.Alerta);
+                <tr>
+                    <td><span class="chip alerta-@p.Alerta">@p.Alerta</span></td>
+                    <td class="d-none d-md-table-cell">@(g == null ? "As três grandezas dentro dos limites" : $"Média de {g.Chave} fora da faixa do perfil")</td>
+                    <td>@(p.Prioridade == 0 ? "—" : p.Prioridade + "ª")</td>
+                    <td>
+                        @if (p.MeioCicloMs > 0)
+                        {
+                            <span class="led-mini" style="--meio:@(p.MeioCicloMs)ms"></span>
+                        }
+                        @p.Led
+                    </td>
+                    <td>@(p.BuzzerHz == 0 ? "Desligado" : p.BuzzerHz + " Hz")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<p class="small text-muted mt-2 mb-0">O buzzer toca enquanto o LED está aceso. Com mais de uma grandeza fora do limite, vale a de maior prioridade.</p>

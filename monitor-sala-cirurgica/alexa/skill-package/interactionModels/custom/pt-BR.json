@@ -1,0 +1,241 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "monitor cirúrgico",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": [
+            "o que você faz",
+            "como funciona",
+            "quais comandos existem"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "EstadoSalaIntent",
+          "slots": [
+            {
+              "name": "sala",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "como está a sala",
+            "como está a sala {sala}",
+            "como estão as medidas",
+            "como estão as medidas da sala {sala}",
+            "qual o estado da sala",
+            "qual o estado da sala {sala}",
+            "me dá um resumo",
+            "resumo da sala {sala}",
+            "status da sala",
+            "status da sala {sala}",
+            "situação da sala",
+            "situação da sala {sala}",
+            "como está o ambiente",
+            "como estão as coisas na sala"
+          ]
+        },
+        {
+          "name": "GrandezaIntent",
+          "slots": [
+            {
+              "name": "grandeza",
+              "type": "TIPO_GRANDEZA"
+            },
+            {
+              "name": "sala",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "qual a {grandeza}",
+            "qual é a {grandeza}",
+            "qual a {grandeza} da sala",
+            "qual a {grandeza} da sala {sala}",
+            "quanto está a {grandeza}",
+            "quanto está a {grandeza} da sala {sala}",
+            "como está a {grandeza}",
+            "me diga a {grandeza}",
+            "qual o valor da {grandeza}",
+            "qual o valor de {grandeza}",
+            "fala a {grandeza}"
+          ]
+        },
+        {
+          "name": "AlertaIntent",
+          "slots": [
+            {
+              "name": "sala",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "tem algum alerta",
+            "tem alerta na sala {sala}",
+            "existe algum alerta",
+            "o alarme está tocando",
+            "por que o alarme está tocando",
+            "por que o alarme da sala {sala} está tocando",
+            "qual o alerta",
+            "qual é o alerta ativo",
+            "tem alguma anomalia",
+            "tem algum problema na sala",
+            "algum valor fora do limite"
+          ]
+        },
+        {
+          "name": "LimitesIntent",
+          "slots": [
+            {
+              "name": "grandeza",
+              "type": "TIPO_GRANDEZA"
+            },
+            {
+              "name": "sala",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "quais são os limites",
+            "quais os limites",
+            "quais os limites da sala {sala}",
+            "qual o limite de {grandeza}",
+            "quais os limites de {grandeza}",
+            "qual a faixa de {grandeza}",
+            "qual o perfil ativo",
+            "qual o perfil da sala {sala}"
+          ]
+        },
+        {
+          "name": "SilenciarIntent",
+          "slots": [
+            {
+              "name": "minutos",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "sala",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "silenciar o alarme",
+            "silencia o alarme",
+            "silenciar o alarme por {minutos} minutos",
+            "silencia o alarme por {minutos} minutos",
+            "silenciar o alarme da sala {sala}",
+            "silenciar o alarme da sala {sala} por {minutos} minutos",
+            "desligar o alarme por {minutos} minutos",
+            "desliga o alarme",
+            "desliga o buzzer",
+            "parar o alarme",
+            "para o alarme",
+            "pausar o alarme por {minutos} minutos"
+          ]
+        },
+        {
+          "name": "ReativarIntent",
+          "slots": [
+            {
+              "name": "sala",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "reativar o alarme",
+            "reativa o alarme",
+            "religar o alarme",
+            "religa o alarme",
+            "reativar a supervisão",
+            "voltar a supervisão",
+            "religar a supervisão da sala {sala}",
+            "cancelar o silêncio",
+            "acabar com o silêncio"
+          ]
+        },
+        {
+          "name": "TestarAlertaIntent",
+          "slots": [
+            {
+              "name": "grandeza",
+              "type": "TIPO_GRANDEZA"
+            },
+            {
+              "name": "sala",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "testar o alerta de {grandeza}",
+            "testa o alerta de {grandeza}",
+            "testar o alarme de {grandeza}",
+            "teste do alerta de {grandeza}",
+            "testar o alerta de {grandeza} na sala {sala}",
+            "fazer um teste de {grandeza}",
+            "testar o alerta",
+            "testar o alarme"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "TIPO_GRANDEZA",
+          "values": [
+            {
+              "id": "temperatura",
+              "name": {
+                "value": "temperatura",
+                "synonyms": [
+                  "temp",
+                  "calor",
+                  "frio",
+                  "graus"
+                ]
+              }
+            },
+            {
+              "id": "umidade",
+              "name": {
+                "value": "umidade",
+                "synonyms": [
+                  "umidade do ar",
+                  "umidade relativa",
+                  "humidade"
+                ]
+              }
+            },
+            {
+              "id": "luminosidade",
+              "name": {
+                "value": "luminosidade",
+                "synonyms": [
+                  "luz",
+                  "iluminação",
+                  "claridade",
+                  "luminância"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

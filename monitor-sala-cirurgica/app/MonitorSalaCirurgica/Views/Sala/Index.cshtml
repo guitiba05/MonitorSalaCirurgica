@@ -1,0 +1,117 @@
+@model List<SalaViewModel>
+@{
+    ViewData["Title"] = "Salas";
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Salas</h1>
+        <p class="text-muted mb-0">Dispositivos gravados direto no IoT Agent do FIWARE (<code>/iot/devices</code>) e a configuração de cada sala no banco.
+            Os testes mandam <code>setAlert</code> pelo Orion e duram alguns segundos.</p>
+    </div>
+    <a href="/sala/Create" class="btn btn-success">Novo registro</a>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Ações</th>
+                    <th>Sala</th>
+                    <th>Entidade no Orion</th>
+                    <th>Perfil · janela</th>
+                    <th>Agora</th>
+                    <th>Alerta na placa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">Nenhuma sala cadastrada.</td></tr>
+                }
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td class="text-nowrap">
+                            @if (s.ExisteNoIotAgent)
+                            {
+                                <a href="/sala/edit?id=@s.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                if (s.TemComando)
+                                {
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Testar</button>
+                                        <div class="dropdown-menu">
+                                            @foreach (var p in Contrato.Padroes)
+                                            {
+                                                <a class="dropdown-item" href="/sala/Testar?id=@s.Id&alerta=@p.Alerta">
+                                                    <span class="chip alerta-@p.Alerta">@p.Alerta</span>
+                                                    <span class="small text-muted ml-1">@(p.BuzzerHz > 0 ? $"{p.Led} · {p.BuzzerHz} Hz" : "desligar")</span>
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            <a href="javascript:apagarSala('@s.Id', '@s.NomeEntidade')" class="btn btn-sm btn-outline-danger">Excluir</a>
+                        </td>
+                        <td>
+                            <strong>@(string.IsNullOrEmpty(s.Nome) ? s.Id : s.Nome)</strong>
+                            <div class="small text-muted"><code>@s.Id</code> · apikey <code>@s.Apikey</code> · @s.Transporte</div>
+                            @if (!s.ExisteNoIotAgent)
+                            {
+                                <span class="badge badge-warning">sem dispositivo no IoT Agent</span>
+                            }
+                            else if (!s.TemComando)
+                            {
+                                <span class="badge badge-warning">sem o comando setAlert</span>
+                            }
+                        </td>
+                        <td class="small"><code>@s.NomeEntidade</code></td>
+                        <td class="small">
+                            @if (s.ExisteNoBanco)
+                            {
+                                @s.PerfilAtivo<br />
+                                @(s.JanelaSegundos + " s · ")
+                                <span class="@(s.SupervisaoAtiva ? "text-success" : "text-danger")">@(s.SupervisaoAtiva ? "supervisão ligada" : "supervisão desligada")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">padrão (criada na 1ª supervisão)</span>
+                            }
+                        </td>
+                        <td class="small">
+                            @if (s.Estado == null)
+                            {
+                                <span class="text-muted">sem dados no Orion</span>
+                            }
+                            else
+                            {
+                                <div>@(s.Estado.Temperatura?.ToString("0.0") ?? "—") °C · @(s.Estado.Umidade?.ToString("0") ?? "—") % · luz @(s.Estado.Luminosidade?.ToString("0") ?? "—") %</div>
+                                <div class="text-muted">@s.Estado.AtualizadoEm?.ToString("dd/MM HH:mm:ss")</div>
+                            }
+                        </td>
+                        <td>
+                            @if (s.Estado?.Alerta != null)
+                            {
+                                <span class="chip alerta-@s.Estado.Alerta">@s.Estado.Alerta</span>
+                            }
+                            @if (s.Estado?.StatusComando != null)
+                            {
+                                <div class="small text-muted">comando: @s.Estado.StatusComando</div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h2 class="h5">Contrato com o firmware</h2>
+        <p class="small text-muted">Cada sala é cadastrada com os atributos e o comando do <code>sala_cirurgica.ino</code>.
+            Medidas em <code>/apikey/device_id/attrs</code>, comando em <code>/cmd</code> e confirmação em <code>/cmdexe</code>.</p>
+        <partial name="_TabelaPadroes" />
+    </div>
+</div>

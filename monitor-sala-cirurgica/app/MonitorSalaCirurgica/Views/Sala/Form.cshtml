@@ -1,0 +1,112 @@
+@model SalaViewModel
+@{
+    ViewData["Title"] = "Cadastro de Sala";
+    bool inclusao = ViewBag.Operacao == "I";
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Cadastro de Sala</h1>
+        <p class="text-muted mb-0">@(inclusao
+            ? "Cria o grupo de serviço do apikey (se faltar), o dispositivo no IoT Agent e a configuração da sala no banco."
+            : "Atualiza o dispositivo no IoT Agent (PUT /iot/devices/{id}) e a configuração da sala no banco.")</p>
+    </div>
+    <a href="/sala/index" class="btn btn-outline-secondary">Voltar</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-7 mb-3">
+        <form action="Save" method="post" class="card">
+            <div class="card-body">
+                <input type="hidden" name="Operacao" value="@ViewBag.Operacao" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <h2 class="h6 secao">No IoT Agent (FIWARE)</h2>
+                <div class="form-row">
+                    <div class="form-group col-sm-4">
+                        <label for="Id" class="control-label">device_id</label>
+                        @if (inclusao)
+                        {
+                            <input asp-for="Id" class="form-control" oninput="sugereEntidade()" />
+                        }
+                        else
+                        {
+                            <input asp-for="Id" class="form-control" readonly />
+                        }
+                        <span asp-validation-for="Id" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-sm-8">
+                        <label for="NomeEntidade" class="control-label">Entidade no Orion</label>
+                        <input asp-for="NomeEntidade" class="form-control" readonly="@(!inclusao)" />
+                        <span asp-validation-for="NomeEntidade" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="Apikey" class="control-label">apikey</label>
+                        <input asp-for="Apikey" class="form-control" readonly="@(!inclusao)" />
+                        <span asp-validation-for="Apikey" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-sm-8 small text-muted d-flex align-items-end">
+                        Têm que ser iguais ao config.h do firmware (APIKEY e DEVICE_ID): com valores diferentes, o IoT Agent ignora as mensagens sem avisar.
+                    </div>
+                </div>
+
+                <h2 class="h6 secao">Na aplicação (banco SQL)</h2>
+                <div class="form-row">
+                    <div class="form-group col-sm-6">
+                        <label for="Nome" class="control-label">Nome da sala</label>
+                        <input asp-for="Nome" class="form-control" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="PerfilAtivo" class="control-label">Perfil de limites</label>
+                        <select asp-for="PerfilAtivo" asp-items="ViewBag.Perfis" class="form-control"></select>
+                        <span asp-validation-for="PerfilAtivo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="JanelaSegundos" class="control-label">Janela da média (s)</label>
+                        <input asp-for="JanelaSegundos" type="number" min="10" max="3600" class="form-control" />
+                        <small class="form-text text-muted">O ESP32 publica a cada 5 s: 30 s = média de cerca de 6 medidas.</small>
+                        <span asp-validation-for="JanelaSegundos" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-sm-6 d-flex align-items-center">
+                        <div class="custom-control custom-switch">
+                            <input asp-for="SupervisaoAtiva" class="custom-control-input" />
+                            <label for="SupervisaoAtiva" class="custom-control-label">Supervisão automática ligada</label>
+                        </div>
+                    </div>
+                    @if (inclusao)
+                    {
+                        <div class="form-group col-12">
+                            <div class="custom-control custom-checkbox">
+                                <input asp-for="CriarInscricoes" class="custom-control-input" />
+                                <label for="CriarInscricoes" class="custom-control-label">Criar as três inscrições do STH-Comet (uma por grandeza)</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <input type="submit" value="Salvar dados" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+    <div class="col-lg-5 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h6 secao">O que vai para o IoT Agent</h2>
+                <table class="table table-sm">
+                    <thead><tr><th>UL</th><th>Atributo</th><th>Tipo</th><th>Unidade</th></tr></thead>
+                    <tbody>
+                        @foreach (var g in Contrato.GrandezasExibicao)
+                        {
+                            <tr><td><code>@g.ObjectId</code></td><td><code>@g.Atributo</code></td><td>@g.TipoNgsi</td><td>@g.Unidade</td></tr>
+                        }
+                        <tr><td><code>a</code></td><td><code>alert</code></td><td>Text</td><td>luz, temp, umid ou off</td></tr>
+                    </tbody>
+                </table>
+                <p class="small mb-1"><strong>Comando:</strong> <code>setAlert</code> com <code>luz</code>, <code>temp</code>, <code>umid</code> ou <code>off</code></p>
+                <p class="small mb-1"><strong>Para o firmware:</strong> broker <code>@ViewBag.ServidorMqtt:@ViewBag.PortaMqtt</code></p>
+                <p class="small mb-0" id="topicosFirmware"><strong>Medidas:</strong> <code>/@Model.Apikey/@Model.Id/attrs</code> → <code>t|23.5|h|58|l|42</code></p>
+            </div>
+        </div>
+    </div>
+</div>

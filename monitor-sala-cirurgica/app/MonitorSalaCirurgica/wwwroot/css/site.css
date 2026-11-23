@@ -1,0 +1,130 @@
+/* =====================================================================
+   Monitor de Sala Cirúrgica: ajustes visuais sobre o Bootstrap 4 (o mesmo do CadAluno)
+   ===================================================================== */
+:root {
+  --fundo: #f3f6f8;
+  --tinta: #17232d;
+  --suave: #5b6b78;
+  --linha: #dbe3e8;
+  --marca: #0f5e6e;          /* verde-azulado hospitalar */
+  --marca-escura: #0a4652;
+  --ok: #1d7a4f;
+  --ok-fundo: #e3f4ea;
+  --perigo: #b42318;
+  --perigo-fundo: #fde8e6;
+  --cinza-fundo: #eef1f3;
+  /* uma cor por grandeza / alerta: iguais nos cartões, gráficos e chips */
+  --cor-temp: #c2410c;
+  --cor-umid: #1d4ed8;
+  --cor-luz: #a16207;
+  --led: #2f7bff;
+}
+
+html { font-size: 15px; position: relative; min-height: 100%; }
+@media (min-width: 768px) { html { font-size: 16px; } }
+body { background: var(--fundo); color: var(--tinta); margin-bottom: 70px; font-variant-numeric: tabular-nums; }
+h1, .h3 { font-weight: 650; }
+code { color: var(--marca-escura); }
+
+/* ---------- barra superior e rodapé ---------- */
+.barra { background: var(--marca); box-shadow: 0 1px 0 rgba(0, 0, 0, .08); }
+.marca { display: inline-flex; align-items: center; font-weight: 600; }
+.marca svg { margin-right: .45rem; }
+.barra .nav-link { color: rgba(255, 255, 255, .85) !important; border-radius: .35rem; }
+.barra .nav-link:hover { background: rgba(255, 255, 255, .08); }
+.barra .nav-link.active { color: #fff !important; background: rgba(255, 255, 255, .18); }
+.rodape { position: absolute; bottom: 0; width: 100%; line-height: 60px; background: #fff; border-top: 1px solid var(--linha); font-size: .85rem; }
+.ponto { display: inline-block; width: .6rem; height: .6rem; border-radius: 50%; background: #9aa5ae; margin-right: .3rem; vertical-align: middle; }
+.ponto.ok { background: var(--ok); }
+.ponto.falha { background: var(--perigo); }
+
+/* ---------- estrutura ---------- */
+.card { border-color: var(--linha); border-radius: .6rem; }
+.cabecalho { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; margin-bottom: 1.25rem; }
+.cabecalho > div:first-child { max-width: 75ch; margin-right: 1rem; }
+.table thead th, .table th { font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; color: var(--suave); border-top: 0; }
+.secao { text-transform: uppercase; letter-spacing: .04em; color: var(--suave); font-weight: 700; margin: .5rem 0 1rem; }
+.cartao-login { margin-top: 2rem; border-top: 4px solid var(--marca); }
+
+/* botões e paginação na cor da marca */
+.btn-primary { background: var(--marca); border-color: var(--marca); }
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active { background: var(--marca-escura) !important; border-color: var(--marca-escura) !important; }
+.btn-outline-primary { color: var(--marca); border-color: var(--marca); }
+.btn-outline-primary:hover { background: var(--marca); border-color: var(--marca); }
+.page-item.active .page-link { background: var(--marca); border-color: var(--marca); }
+.page-link { color: var(--marca); }
+.custom-control-input:checked ~ .custom-control-label::before { background: var(--marca); border-color: var(--marca); }
+
+/* consulta avançada (capítulo 36 da apostila) */
+fieldset { margin: 0 0 20px; padding: 10px 15px 15px; border: 1px solid var(--linha); border-radius: 8px; background: #fff; }
+legend { width: auto; padding: 2px 6px; font-size: 1rem; font-weight: 600; margin-bottom: 0; }
+
+/* ---------- faixa do alerta (dashboard) ---------- */
+.faixa { display: flex; flex-wrap: wrap; align-items: center; border-radius: .6rem; padding: 1rem 1.25rem; margin-bottom: 1rem; border: 1px solid var(--linha); background: #fff; }
+.faixa > * { margin-right: 1rem; }
+.faixa .titulo { font-size: 1.15rem; font-weight: 700; }
+.faixa .detalhe { color: var(--suave); font-size: .9rem; }
+.faixa .acoes { margin-left: auto; margin-right: 0; display: flex; flex-wrap: wrap; align-items: center; }
+.faixa .acoes > * { margin: .25rem 0 .25rem .5rem; }
+.faixa.alerta-off { background: var(--ok-fundo); border-color: #b9e2c9; }
+.faixa.alerta-off .titulo { color: var(--ok); }
+.faixa.alerta-luz, .faixa.alerta-temp, .faixa.alerta-umid { background: var(--perigo-fundo); border-color: #f5c2bd; }
+.faixa.alerta-luz .titulo, .faixa.alerta-temp .titulo, .faixa.alerta-umid .titulo { color: var(--perigo); }
+.faixa.silencio { background: #fff7e0; border-color: #f2d58a; }
+.faixa.indefinido { background: var(--cinza-fundo); }
+
+/* LED virtual: pisca no mesmo meio ciclo do firmware */
+.led { width: 2.25rem; height: 2.25rem; border-radius: 50%; flex: none; background: #cfd8de; box-shadow: inset 0 -3px 6px rgba(0, 0, 0, .15); }
+.led.piscando { animation: piscar calc(var(--meio, 400ms) * 2) steps(1, end) infinite; }
+.led-mini { display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; margin-right: .35rem; vertical-align: middle;
+            background: #cfd8de; animation: piscar calc(var(--meio) * 2) steps(1, end) infinite; }
+@keyframes piscar {
+  0% { background: var(--led); box-shadow: 0 0 18px 4px rgba(47, 123, 255, .55); }
+  50% { background: #cfd8de; box-shadow: inset 0 -3px 6px rgba(0, 0, 0, .15); }
+}
+@media (prefers-reduced-motion: reduce) { .led.piscando, .led-mini { animation: none; background: var(--led); } }
+
+/* ---------- cartões das grandezas ---------- */
+.cartao-grandeza { border-top: 4px solid var(--cor); }
+.cartao-grandeza[data-grandeza="temperatura"] { --cor: var(--cor-temp); }
+.cartao-grandeza[data-grandeza="umidade"] { --cor: var(--cor-umid); }
+.cartao-grandeza[data-grandeza="luminosidade"] { --cor: var(--cor-luz); }
+.cartao-grandeza .rotulo { font-size: .8rem; color: var(--suave); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.cartao-grandeza .valor { font-size: 2.5rem; font-weight: 700; line-height: 1.1; margin: .35rem 0; }
+.cartao-grandeza .valor small { font-size: 1.05rem; font-weight: 600; color: var(--suave); margin-left: .2rem; }
+.cartao-grandeza dl { display: grid; grid-template-columns: auto 1fr; grid-gap: .15rem .75rem; font-size: .9rem; }
+.cartao-grandeza dt { color: var(--suave); font-weight: 500; }
+.cartao-grandeza dd { margin: 0; }
+.cartao-grandeza.anomalia { box-shadow: 0 0 0 2px var(--perigo) inset; }
+.situacao { font-size: .75rem; font-weight: 700; padding: .15rem .55rem; border-radius: 999px; background: var(--cinza-fundo); color: var(--suave); }
+.situacao.normal { background: var(--ok-fundo); color: var(--ok); }
+.situacao.acima, .situacao.abaixo { background: var(--perigo-fundo); color: var(--perigo); }
+
+/* tela inicial */
+.cartao-sala { border-left: 4px solid var(--ok); }
+.cartao-sala.alerta-luz, .cartao-sala.alerta-temp, .cartao-sala.alerta-umid { border-left-color: var(--perigo); }
+.valor-pequeno { font-size: 1.6rem; font-weight: 700; }
+.valor-pequeno small { font-size: .85rem; color: var(--suave); }
+.status-servico.ok { border-color: #b9e2c9; }
+.status-servico.falha { border-color: #f5c2bd; background: #fffafa; }
+
+/* chips de alerta */
+.chip { display: inline-block; min-width: 3.2rem; text-align: center; padding: .1rem .5rem; border-radius: .35rem; font-weight: 700; font-size: .8rem;
+        font-family: SFMono-Regular, Menlo, Consolas, monospace; background: var(--cinza-fundo); color: var(--suave); }
+.chip.alerta-luz { background: #fdf3d7; color: var(--cor-luz); }
+.chip.alerta-temp { background: #fde7dc; color: var(--cor-temp); }
+.chip.alerta-umid { background: #e1e9fd; color: var(--cor-umid); }
+
+/* gráficos */
+.grafico { position: relative; height: 240px; }
+.seletor-periodo .btn { min-width: 3.5rem; }
+
+/* simulador da Alexa */
+.fala { border-left: 4px solid #00caff; background: #effbff; border-radius: .5rem; padding: .9rem 1rem; min-height: 3.2rem; }
+.json-alexa { max-height: 260px; overflow: auto; font-size: .8rem; background: #0f1b24; color: #d6e2ea; border-radius: .5rem; padding: .75rem; }
+
+/* resumo do período (dashboard) */
+.resumo-periodo { display: grid; grid-template-columns: auto 1fr; grid-gap: .5rem 1rem; font-size: 1rem; }
+.resumo-periodo dt { color: var(--suave); font-weight: 500; }
+.resumo-periodo dd { margin: 0; font-weight: 700; text-align: right; }
+.chip.alerta-off.normal { background: var(--ok-fundo); color: var(--ok); }

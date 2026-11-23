@@ -1,0 +1,50 @@
+{
+  "manifest": {
+    "manifestVersion": "1.0",
+    "publishingInformation": {
+      "locales": {
+        "pt-BR": {
+          "name": "Monitor de Sala Cirúrgica",
+          "summary": "Temperatura, umidade, luminosidade e alertas da sala cirúrgica, direto do FIWARE.",
+          "description": "Skill do Projeto N2 (Sistemas Embarcados, FESA). Consulta a aplicação de supervisão, que lê o Orion e o STH-Comet: valores atuais, médias, limites do perfil e alerta ativo. Também silencia o alarme por alguns minutos, reativa a supervisão e testa cada alerta.",
+          "examplePhrases": [
+            "Alexa, abra o monitor cirúrgico",
+            "Alexa, pergunte ao monitor cirúrgico se tem algum alerta",
+            "Alexa, peça ao monitor cirúrgico para silenciar o alarme por cinco minutos"
+          ],
+          "keywords": [
+            "sala cirúrgica",
+            "FIWARE",
+            "IoT",
+            "ESP32"
+          ]
+        }
+      },
+      "isAvailableWorldwide": false,
+      "distributionCountries": [
+        "BR"
+      ],
+      "testingInstructions": "Skill de uso acadêmico, em estágio de desenvolvimento.",
+      "category": "EDUCATION_AND_REFERENCE"
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "https://SEU-DOMINIO.ngrok-free.app/api/alexa",
+          "sslCertificateType": "Wildcard"
+        },
+        "interfaces": []
+      }
+    },
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "usesPersonalInfo": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "locales": {
+        "pt-BR": {}
+      }
+    }
+  }
+}

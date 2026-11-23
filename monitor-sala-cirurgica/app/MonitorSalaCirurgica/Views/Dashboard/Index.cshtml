@@ -1,0 +1,148 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    var salas = (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Salas;
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Dashboard da sala</h1>
+        <p class="text-muted mb-0" id="infoSala">Carregando…</p>
+    </div>
+    @if (salas.Count > 1)
+    {
+        <form method="get" class="form-inline">
+            <label for="salaId" class="mr-2">Sala</label>
+            <select id="salaId" name="salaId" class="form-control" onchange="this.form.submit()">
+                @foreach (var s in salas)
+                {
+                    <option value="@s.Value" selected="@(s.Value == (string)ViewBag.SalaId)">@s.Text</option>
+                }
+            </select>
+        </form>
+    }
+</div>
+
+@if (salas.Count == 0 && ViewBag.ErroFiware == null)
+{
+    <div class="alert alert-info">Nenhuma sala cadastrada no IoT Agent. <a asp-controller="Sala" asp-action="Create" class="alert-link">Cadastrar a primeira sala</a></div>
+}
+else
+{
+    <div id="erroDashboard" class="alert alert-danger d-none"></div>
+
+    @* Faixa do alerta: o que a placa está mostrando (atributo "alert" publicado pelo ESP32) *@
+    <section id="faixa" class="faixa indefinido" aria-live="polite">
+        <div id="led" class="led" title="LED azul da placa"></div>
+        <div>
+            <div id="faixaTitulo" class="titulo">Aguardando dados…</div>
+            <div id="faixaDetalhe" class="detalhe"></div>
+        </div>
+        <div class="acoes">
+            <div class="input-group input-group-sm">
+                <select id="minutosSilencio" class="custom-select custom-select-sm" aria-label="Minutos de silêncio">
+                    @foreach (var m in new[] { 1, 2, 5, 10, 15, 30 })
+                    {
+                        <option value="@m" selected="@(m == (int)ViewBag.SilencioPadrao)">@m min</option>
+                    }
+                </select>
+                <div class="input-group-append">
+                    <button id="btnSilenciar" class="btn btn-outline-dark" type="button" onclick="silenciaAlarme()">Silenciar</button>
+                </div>
+            </div>
+            <button id="btnReativar" class="btn btn-sm btn-outline-secondary d-none" type="button" onclick="reativaAlarme()">Reativar supervisão</button>
+        </div>
+    </section>
+
+    <div class="row">
+        @foreach (var g in Contrato.GrandezasExibicao)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card cartao-grandeza h-100" data-grandeza="@g.Chave">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="rotulo">@g.Nome</span>
+                            <span class="situacao" data-campo="situacao">—</span>
+                        </div>
+                        <div class="valor"><span data-campo="atual">—</span><small>@g.Unidade</small></div>
+                        <dl class="mb-0">
+                            <dt>Média</dt><dd data-campo="media">—</dd>
+                            <dt>Faixa</dt><dd data-campo="faixa">—</dd>
+                            <dt>Alerta</dt><dd><span class="chip alerta-@g.Alerta">@g.Alerta</span> <span class="small text-muted">prioridade @(g.Prioridade)ª</span></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+                <h2 class="h5 mb-0">Gráfico 1 · Histórico (STH-Comet)</h2>
+                <div class="btn-group btn-group-sm seletor-periodo" role="group" aria-label="Período">
+                    @foreach (var p in new[] { new { m = 5, t = "5 min" }, new { m = 15, t = "15 min" }, new { m = 60, t = "1 h" }, new { m = 360, t = "6 h" }, new { m = 1440, t = "24 h" } })
+                    {
+                        <button type="button" class="btn btn-outline-secondary @(p.m == 15 ? "active" : "")" data-minutos="@p.m">@p.t</button>
+                    }
+                </div>
+            </div>
+            <p class="small text-muted" id="infoHistorico">Um gráfico por grandeza; as linhas tracejadas são o mínimo e o máximo do perfil ativo.</p>
+            <div class="row">
+                @foreach (var g in Contrato.GrandezasExibicao)
+                {
+                    <div class="col-lg-4"><div class="grafico"><canvas id="grafico-@g.Chave" aria-label="Histórico de @g.Chave"></canvas></div></div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+                        <h2 class="h5 mb-0">Gráfico 2 · Distribuição das leituras</h2>
+                        <select id="grandezaHistograma" class="custom-select custom-select-sm w-auto" onchange="montaHistograma()" aria-label="Grandeza do histograma">
+                            @foreach (var g in Contrato.GrandezasExibicao)
+                            {
+                                <option value="@g.Chave">@g.Nome</option>
+                            }
+                        </select>
+                    </div>
+                    <p class="small text-muted mb-2">Quantas leituras do período caíram em cada faixa de valores; em vermelho, as faixas fora dos limites.</p>
+                    <div class="grafico"><canvas id="histograma" aria-label="Histograma"></canvas></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5">Resumo do período</h2>
+                    <p class="small text-muted" id="periodoResumo">—</p>
+                    <dl class="resumo-periodo mb-0">
+                        <dt>Leituras</dt><dd id="resumoLeituras">—</dd>
+                        <dt>Mínima</dt><dd id="resumoMinimo">—</dd>
+                        <dt>Média</dt><dd id="resumoMedia">—</dd>
+                        <dt>Máxima</dt><dd id="resumoMaximo">—</dd>
+                        <dt>Fora do limite</dt><dd id="resumoFora">—</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h2 class="h5">Tabela de alertas</h2>
+            <partial name="_TabelaPadroes" />
+        </div>
+    </div>
+
+    <div id="dashboard" data-sala="@ViewBag.SalaId" hidden></div>
+}
+
+@section bibliotecas {
+    <script src="~/lib/chart.js/chart.umd.js"></script>
+}
+@section Scripts {
+    <script>$(function () { iniciaDashboard(); });</script>
+}

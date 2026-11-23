@@ -1,0 +1,57 @@
+@model List<AlertaLogViewModel>
+@{
+    ViewData["Title"] = "Histórico de alertas";
+    DateTime? de = ViewBag.DataInicial, ate = ViewBag.DataFinal;
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Histórico de alertas</h1>
+        <p class="text-muted mb-0">Cada comando <code>setAlert</code> enviado à placa (tabela <code>AlertaLog</code>). <strong>Confirmado</strong> = o ESP32
+            publicou o mesmo valor no atributo <code>alert</code>; <strong>Reenviado</strong> = não confirmou em 10 s e foi mandado de novo.</p>
+    </div>
+</div>
+
+<form method="get">
+    <fieldset class="form-group">
+        <legend>Filtros</legend>
+        <div class="row">
+            <div class="col-lg-3 mb-2">Sala <br /><select name="sala" class="form-control" asp-items="ViewBag.Salas"></select></div>
+            <div class="col-lg-2 mb-2">Origem <br /><select name="origem" class="form-control" asp-items="ViewBag.Origens"></select></div>
+            <div class="col-lg-3 mb-2">Período <br /><input type="datetime-local" name="dataInicial" class="form-control" value="@de?.ToString("yyyy-MM-ddTHH:mm")" /></div>
+            <div class="col-lg-3 mb-2"><br /><input type="datetime-local" name="dataFinal" class="form-control" value="@ate?.ToString("yyyy-MM-ddTHH:mm")" /></div>
+            <div class="col-lg-1 mb-2"><br /><input type="submit" class="btn btn-success btn-block" value="Aplicar" /></div>
+        </div>
+    </fieldset>
+</form>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped mb-0">
+            <tr><th>Data e hora</th><th>Sala</th><th>Alerta</th><th>Origem</th><th>Motivo</th><th>Situação</th></tr>
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="6" class="text-center text-muted py-4">Nenhum comando registrado com esses filtros.</td></tr>
+            }
+            @foreach (var a in Model)
+            {
+                string classe = a.Status == StatusAlerta.Confirmado ? "badge-success" : a.Status == StatusAlerta.Falha ? "badge-danger"
+                              : a.Status.StartsWith("Reenviado") ? "badge-warning" : "badge-secondary";
+                <tr>
+                    <td class="text-nowrap">@a.DataHora.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td><code>@a.DeviceId</code></td>
+                    <td><span class="chip alerta-@a.Alerta">@a.Alerta</span></td>
+                    <td>@a.Origem</td>
+                    <td class="small">@a.Motivo</td>
+                    <td><span class="badge @classe">@a.Status</span></td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h2 class="h5">Tabela de alertas</h2>
+        <partial name="_TabelaPadroes" />
+    </div>
+</div>

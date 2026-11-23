@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Login";
+}
+<div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+        <div class="card cartao-login">
+            <div class="card-body">
+                <h2 class="h4 mb-1">Entrar</h2>
+                <p class="text-muted small mb-4">Supervisão de temperatura, umidade e luminosidade da sala cirúrgica.</p>
+                <form action="/login/FazLogin" method="post">
+                    <label for="usuario" class="control-label">Usuário</label>
+                    <input type="text" value="admin" id="usuario" name="usuario" class="form-control" required placeholder="Usuário..." />
+                    <br />
+                    <label for="senha" class="control-label">Senha</label>
+                    <input type="password" value="1234" id="senha" name="senha" class="form-control" required placeholder="Senha..." />
+                    <br />
+                    <input type="submit" value="Entrar" class="btn btn-primary btn-block" />
+                    <span class="text-danger d-block mt-2">@ViewBag.Erro</span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

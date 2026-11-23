@@ -1,0 +1,17 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Erro";
+}
+<div class="card border-danger">
+    <div class="card-body">
+        <h1 class="h4 text-danger">Ocorreu um erro inesperado!</h1>
+        <p class="mb-2">Veja abaixo os detalhes:</p>
+        <code class="text-danger d-block mb-3">@Model?.Erro</code>
+        @if (Model?.ShowRequestId == true)
+        {
+            <p class="small text-muted">Código da requisição: <code>@Model.RequestId</code></p>
+        }
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">Voltar</a>
+        <a href="/home/index" class="btn btn-link">Página inicial</a>
+    </div>
+</div>

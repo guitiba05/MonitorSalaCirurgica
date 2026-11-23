@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Consulta de mensagens IoT";
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Consulta de mensagens IoT</h1>
+        <p class="text-muted mb-0">Medidas gravadas pelo STH-Comet, consultadas pela API dele via AJAX (capítulo 36 da apostila).
+            A paginação também é feita pela API (<code>hLimit</code> e <code>hOffset</code>).</p>
+    </div>
+</div>
+
+<fieldset id="areaFiltro" class="form-group">
+    <legend>Filtros</legend>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-2">
+            Sala <br />
+            <select id="sala" class="form-control" asp-items="@ViewBag.Salas"></select>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            Grandeza <br />
+            <select id="grandeza" class="form-control" asp-items="@ViewBag.Grandezas"></select>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            Ordem <br />
+            <select id="ordem" class="form-control">
+                <option value="desc">Mais recentes primeiro</option>
+                <option value="asc">Mais antigas primeiro</option>
+            </select>
+        </div>
+        <div class="col-lg-2 col-md-6 mb-2">
+            Por página <br />
+            <select id="tamanho" class="form-control">
+                <option>10</option>
+                <option selected>25</option>
+                <option>50</option>
+                <option>100</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-2">
+            De <br />
+            <input type="datetime-local" id="dataInicial" class="form-control" />
+        </div>
+        <div class="col-lg-4 col-md-6 mb-2">
+            Até <br />
+            <input type="datetime-local" id="dataFinal" class="form-control" />
+        </div>
+        <div class="col-lg-2 col-md-6 mb-2">
+            <br />
+            <input type="button" id="btnFiltro" class="btn btn-success btn-block" value="Aplicar" onclick="aplicaFiltroConsultaAvancada(1)" />
+        </div>
+    </div>
+    <div class="mt-1">
+        <span class="small text-muted mr-2">Atalhos:</span>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="consultaUltimos(15)">últimos 15 min</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="consultaUltimos(60)">última hora</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="consultaUltimos(1440)">últimas 24 h</button>
+    </div>
+</fieldset>
+
+<div id="resultadoConsulta" class="table-responsive">
+</div>
+
+@section Scripts {
+    <script>$(function () { consultaUltimos(60); });</script>
+}

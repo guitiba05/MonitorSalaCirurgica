@@ -1,0 +1,91 @@
+@model ConfigAlexa
+@{
+    ViewData["Title"] = "Alexa";
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Alexa</h1>
+        <p class="text-muted mb-0">Skill personalizada <strong>“monitor cirúrgico”</strong>: a equipe pergunta pelo Echo como está a sala, se há alerta ou pede para
+            silenciar o alarme. A skill usa os mesmos dados do dashboard (Orion e STH-Comet) e nunca fala direto com o ESP32.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-7 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5">Simulador</h2>
+                <p class="small text-muted">Monta o mesmo JSON que a Alexa enviaria e passa pela mesma lógica da skill. Serve para testar sem o Echo.</p>
+                <div class="mb-3" id="intentsAlexa">
+                    <button class="btn btn-sm btn-outline-primary mb-1" onclick="simulaAlexa('LaunchRequest')">“Alexa, abra o monitor cirúrgico”</button>
+                    <button class="btn btn-sm btn-outline-primary mb-1" onclick="simulaAlexa('IntentRequest', 'EstadoSalaIntent')">“como está a sala”</button>
+                    <button class="btn btn-sm btn-outline-primary mb-1" onclick="simulaAlexa('IntentRequest', 'GrandezaIntent', true)">“qual a {grandeza}”</button>
+                    <button class="btn btn-sm btn-outline-primary mb-1" onclick="simulaAlexa('IntentRequest', 'AlertaIntent')">“tem algum alerta”</button>
+                    <button class="btn btn-sm btn-outline-primary mb-1" onclick="simulaAlexa('IntentRequest', 'LimitesIntent')">“quais são os limites”</button>
+                    <button class="btn btn-sm btn-outline-danger mb-1" onclick="simulaAlexa('IntentRequest', 'SilenciarIntent', false, true)">“silenciar o alarme por {minutos} minutos”</button>
+                    <button class="btn btn-sm btn-outline-secondary mb-1" onclick="simulaAlexa('IntentRequest', 'ReativarIntent')">“reativar o alarme”</button>
+                    <button class="btn btn-sm btn-outline-secondary mb-1" onclick="simulaAlexa('IntentRequest', 'TestarAlertaIntent', true)">“testar o alerta de {grandeza}”</button>
+                    <button class="btn btn-sm btn-outline-secondary mb-1" onclick="simulaAlexa('IntentRequest', 'AMAZON.HelpIntent')">“ajuda”</button>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-sm-4">
+                        <label for="slotSala" class="control-label small">{sala} (número)</label>
+                        <input id="slotSala" type="number" min="1" class="form-control form-control-sm" placeholder="padrão: @Model.SalaPadrao" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="slotGrandeza" class="control-label small">{grandeza}</label>
+                        <select id="slotGrandeza" class="form-control form-control-sm">
+                            @foreach (var g in Contrato.GrandezasExibicao)
+                            {
+                                <option value="@g.Chave">@g.Chave</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="slotMinutos" class="control-label small">{minutos}</label>
+                        <input id="slotMinutos" type="number" min="1" max="30" value="5" class="form-control form-control-sm" />
+                    </div>
+                </div>
+                <div class="fala" id="falaAlexa" aria-live="polite">A resposta da Alexa aparece aqui.</div>
+                <div id="confirmaAlexa" class="mt-2 d-none">
+                    <button class="btn btn-sm btn-success" onclick="confirmaAlexa('CONFIRMED')">Sim</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="confirmaAlexa('DENIED')">Não</button>
+                </div>
+                <div class="custom-control custom-checkbox mt-3">
+                    <input type="checkbox" class="custom-control-input" id="falarAlexa" checked />
+                    <label class="custom-control-label" for="falarAlexa">Ler a resposta em voz alta (voz do navegador)</label>
+                </div>
+                <details class="mt-2"><summary class="small">JSON da resposta</summary><pre class="json-alexa mt-2" id="jsonAlexa"></pre></details>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 mb-3">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h2 class="h5">Configuração atual</h2>
+                <dl class="row small mb-0">
+                    <dt class="col-5">Endpoint da skill</dt><dd class="col-7"><code>https://SEU-DOMINIO/api/alexa</code><div class="text-muted">aqui: <code>@ViewBag.Endpoint</code></div></dd>
+                    <dt class="col-5">ID da skill</dt><dd class="col-7">@(string.IsNullOrWhiteSpace(Model.SkillId) ? "não configurado (aceita qualquer skill)" : Model.SkillId)</dd>
+                    <dt class="col-5">Assinatura</dt><dd class="col-7">@(Model.VerificarAssinatura ? "verificada" : "NÃO verificada (só para testes)")</dd>
+                    <dt class="col-5">Sala padrão</dt><dd class="col-7"><code>@Model.SalaPadrao</code></dd>
+                    <dt class="col-5">Anúncios</dt><dd class="col-7">@(ViewBag.AnuncioLigado ? "ligados" : "desligados (Alexa:UrlAnuncio vazio)")</dd>
+                </dl>
+                <button class="btn btn-sm btn-outline-primary mt-3" onclick="testaAnuncioAlexa()" @(ViewBag.AnuncioLigado ? "" : "disabled")>Testar anúncio no Echo</button>
+                <div id="resultadoAnuncio" class="small mt-2"></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5">Como ligar no Echo</h2>
+                <ol class="small pl-3 mb-0">
+                    <li>No <strong>Alexa Developer Console</strong>, crie uma skill <em>Custom</em> em português (BR), com backend próprio.</li>
+                    <li>Em <em>JSON Editor</em>, cole <code>alexa/skill-package/interactionModels/custom/pt-BR.json</code> e clique em <em>Build</em>.</li>
+                    <li>Abra o túnel HTTPS: <code>ngrok http --url=SEU-DOMINIO 5000</code> e use <code>https://SEU-DOMINIO/api/alexa</code> em <em>Endpoint › HTTPS</em> (certificado <em>wildcard</em>).</li>
+                    <li>Copie o <em>Skill ID</em> para <code>Alexa:SkillId</code> no <code>appsettings.json</code>.</li>
+                    <li>Em <em>Test</em>, habilite <em>Development</em>. O Echo logado na mesma conta já atende.</li>
+                </ol>
+                <p class="small mt-2 mb-0">Passo a passo completo em <code>docs/alexa.md</code>.</p>
+            </div>
+        </div>
+    </div>
+</div>

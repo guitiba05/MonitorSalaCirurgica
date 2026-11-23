@@ -1,0 +1,70 @@
+@model InscricaoViewModel
+@{
+    ViewData["Title"] = "Cadastro de Inscrição";
+    bool inclusao = ViewBag.Operacao == "I";
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Cadastro de Inscrição</h1>
+        <p class="text-muted mb-0">@(inclusao ? "POST /v2/subscriptions: uma inscrição por grandeza." : "PATCH /v2/subscriptions/{id}.")</p>
+    </div>
+    <a href="/inscricao/index" class="btn btn-outline-secondary">Voltar</a>
+</div>
+
+<form action="Save" method="post" class="card col-lg-8 px-0">
+    <div class="card-body">
+        <input type="hidden" name="Operacao" value="@ViewBag.Operacao" />
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        @if (inclusao)
+        {
+            <div class="form-row">
+                <div class="form-group col-sm-6">
+                    <label for="SalaId" class="control-label">Sala</label>
+                    <select asp-for="SalaId" asp-items="ViewBag.Salas" class="form-control"></select>
+                    <span asp-validation-for="SalaId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="Atributo" class="control-label">Grandeza</label>
+                    <select asp-for="Atributo" asp-items="ViewBag.Grandezas" class="form-control"></select>
+                    <span asp-validation-for="Atributo" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="small text-muted">Entidade <code>@Model.EntidadeId</code> · atributo <strong>@Model.Atributo</strong> · <code>@Model.Id</code></p>
+            <input type="hidden" asp-for="EntidadeId" />
+            <input type="hidden" asp-for="Atributo" />
+            <div class="form-group">
+                <label for="Status" class="control-label">Situação</label>
+                <select asp-for="Status" class="form-control">
+                    <option value="active">Ativa</option>
+                    <option value="inactive">Inativa (pausa o histórico)</option>
+                </select>
+            </div>
+        }
+
+        <div class="form-group">
+            <label for="Descricao" class="control-label">Descrição</label>
+            <input asp-for="Descricao" class="form-control" placeholder="Em branco: STH-Comet: <atributo> de <entidade>" />
+            <span asp-validation-for="Descricao" class="text-danger"></span>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-sm-8">
+                <label for="Url" class="control-label">URL de notificação</label>
+                <input asp-for="Url" class="form-control" />
+                <small class="form-text text-muted">Endereço interno da rede Docker. Só mude se o container do STH-Comet tiver outro nome.</small>
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="Throttling" class="control-label">Intervalo mínimo (s)</label>
+                <input asp-for="Throttling" type="number" min="0" max="3600" class="form-control" />
+                <small class="form-text text-muted">0 = toda atualização.</small>
+                <span asp-validation-for="Throttling" class="text-danger"></span>
+            </div>
+        </div>
+        <input type="submit" value="Salvar dados" class="btn btn-primary" />
+    </div>
+</form>

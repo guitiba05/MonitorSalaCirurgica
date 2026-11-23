@@ -1,0 +1,64 @@
+@model MonitorSalaCirurgica.DAO.ConfigFiware
+@{
+    ViewData["Title"] = "Conexão";
+}
+<div class="cabecalho">
+    <div>
+        <h1 class="h3 mb-1">Conexão com o FIWARE</h1>
+        <p class="text-muted mb-0">No Learner Lab o IP público da EC2 muda a cada sessão. Troque aqui (vale na hora, sem reiniciar) ou em
+            <code>Fiware:Host</code> no <code>appsettings.json</code>. O firmware também precisa do IP novo no <code>secrets.h</code>.</p>
+    </div>
+</div>
+
+<div class="row" id="statusServicos">
+    @foreach (var nome in new[] { "IoT Agent", "Orion", "STH-Comet" })
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card status-servico" data-nome="@nome">
+                <div class="card-body py-3">
+                    <div class="d-flex justify-content-between"><strong>@nome</strong><span class="ponto"></span></div>
+                    <div class="small text-muted" data-campo="url">—</div>
+                    <div class="small" data-campo="detalhe">verificando…</div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row">
+    <div class="col-lg-5 mb-3">
+        <form action="/conexao/SalvarHost" method="post" class="card">
+            <div class="card-body">
+                <h2 class="h5">IP público da EC2</h2>
+                <label for="host" class="control-label">Endereço</label>
+                <div class="input-group">
+                    <input id="host" name="host" class="form-control" value="@Model.HostLimpo" placeholder="54.210.10.20" required />
+                    <div class="input-group-append"><button class="btn btn-primary" type="submit">Salvar</button></div>
+                </div>
+                <small class="form-text text-muted">Só o IP (ou o nome DNS público), sem porta.</small>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-7 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5">Configuração em uso</h2>
+                <table class="table table-sm mb-0">
+                    <tr><th>IoT Agent</th><td><code>http://@Model.HostLimpo:@Model.PortaIotAgent</code> (provisionamento)</td></tr>
+                    <tr><th>Orion</th><td><code>http://@Model.HostLimpo:@Model.PortaOrion</code> (estado, comandos, inscrições)</td></tr>
+                    <tr><th>STH-Comet</th><td><code>http://@Model.HostLimpo:@Model.PortaSth</code> (histórico)</td></tr>
+                    <tr><th>fiware-service</th><td><code>@Model.Service</code></td></tr>
+                    <tr><th>fiware-servicepath</th><td><code>@Model.ServicePath</code></td></tr>
+                    <tr><th>Notificação do STH</th><td><code>@Model.UrlNotificacaoSth</code> (rede Docker interna)</td></tr>
+                    <tr><th>Proxy</th><td>@(string.IsNullOrWhiteSpace(Model.Proxy) ? "sem proxy" : Model.Proxy)</td></tr>
+                    <tr><th>Tempo limite</th><td>@Model.TimeoutSegundos s por requisição</td></tr>
+                </table>
+                <p class="small text-muted mt-2 mb-0" id="infoSupervisao"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>$(function () { exibeStatusServicos(); });</script>
+}

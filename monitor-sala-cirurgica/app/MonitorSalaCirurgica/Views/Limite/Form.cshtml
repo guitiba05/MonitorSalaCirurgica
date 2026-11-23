@@ -1,0 +1,57 @@
+@model LimiteViewModel
+@{
+    ViewData["Title"] = "Cadastro de Limite";
+    var perfis = (List<string>)ViewBag.Perfis;
+}
+<div class="cabecalho">
+    <div><h1 class="h3 mb-1">Cadastro de Limite</h1></div>
+    <a href="/limite/index" class="btn btn-outline-secondary">Voltar</a>
+</div>
+
+<form action="Save" method="post" class="card col-lg-7 px-0">
+    <div class="card-body">
+        <input type="hidden" name="Operacao" value="@ViewBag.Operacao" />
+
+        <div class="form-row">
+            <div class="form-group col-sm-3">
+                <label for="Id" class="control-label">Código</label>
+                <input asp-for="Id" class="form-control" readonly />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-5">
+                <label for="Perfil" class="control-label">Perfil</label>
+                <input asp-for="Perfil" class="form-control" list="listaPerfis" placeholder="Ex.: Demonstração" />
+                <datalist id="listaPerfis">
+                    @foreach (var p in perfis)
+                    {
+                        <option value="@p"></option>
+                    }
+                </datalist>
+                <span asp-validation-for="Perfil" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="Grandeza" class="control-label">Grandeza</label>
+                <select asp-for="Grandeza" asp-items="ViewBag.Grandezas" class="form-control"></select>
+                <span asp-validation-for="Grandeza" class="text-danger"></span>
+            </div>
+            @* type="text" com inputmode decimal: aceita 28,5 e 28.5 (NumeroModelBinder) *@
+            <div class="form-group col-sm-4">
+                <label for="Minimo" class="control-label">Mínimo</label>
+                <input name="Minimo" id="Minimo" inputmode="decimal" class="form-control" value="@Model.Minimo?.ToString("0.##")" />
+                <span asp-validation-for="Minimo" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="Maximo" class="control-label">Máximo</label>
+                <input name="Maximo" id="Maximo" inputmode="decimal" class="form-control" value="@Model.Maximo?.ToString("0.##")" />
+                <span asp-validation-for="Maximo" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="Histerese" class="control-label">Histerese</label>
+                <input name="Histerese" id="Histerese" inputmode="decimal" class="form-control" value="@Model.Histerese?.ToString("0.##")" />
+                <span asp-validation-for="Histerese" class="text-danger"></span>
+            </div>
+        </div>
+        <p class="small text-muted">Exemplo: máximo 28 °C e histerese 0,5 → o alerta liga com média acima de 28,0 e só desliga quando a média volta a 27,5 ou menos.</p>
+        <input type="submit" value="Salvar dados" class="btn btn-primary" />
+    </div>
+</form>
