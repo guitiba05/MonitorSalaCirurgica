@@ -31,16 +31,16 @@
   <rect x="20" y="20" width="1160" height="110" rx="10" fill="#f4f6f8"/>
   <text x="36" y="40" class="faixa-titulo">INTERFACES</text>
   <rect x="20" y="145" width="1160" height="230" rx="10" fill="#eaf4f5"/>
-  <text x="36" y="165" class="faixa-titulo">APLICAÇÃO · COMPUTADOR DA EQUIPE (ANALISTA 1)</text>
+  <text x="36" y="165" class="faixa-titulo">APLICAÇÃO · COMPUTADOR DA EQUIPE</text>
   <rect x="20" y="420" width="1160" height="250" rx="10" fill="#f2effa"/>
   <text x="36" y="440" class="faixa-titulo">BACK-END · AWS LEARNER LAB · EC2 · DOCKER (FIWARE MADE SIMPLE)</text>
   <rect x="20" y="715" width="1160" height="125" rx="10" fill="#f8f4ea"/>
-  <text x="36" y="735" class="faixa-titulo">IoT · SALA CIRÚRGICA (ANALISTA 2)</text>
+  <text x="36" y="735" class="faixa-titulo">IoT · SALA CIRÚRGICA</text>
 
   <!-- ================= Interfaces ================= -->
   <rect x="60" y="52" width="250" height="60" rx="8" class="caixa"/>
   <text x="76" y="76" class="nome">Navegador</text>
-  <text x="76" y="96" class="sub">equipe e professor · painel e telas</text>
+  <text x="76" y="96" class="sub">equipe · painel e telas</text>
 
   <rect x="560" y="52" width="230" height="60" rx="8" class="caixa" stroke-dasharray="6 4"/>
   <text x="576" y="76" class="nome">Voice Monkey (opcional)</text>

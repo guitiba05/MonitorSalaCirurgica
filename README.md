@@ -131,7 +131,7 @@ Pontos de atenção:
 - **Cores trocadas.** O firmware faz um teste de ligação ao iniciar: acende vermelho, verde e azul em sequência. Se saírem em outra ordem, os fios do LED estão trocados entre D25, D26 e D27.
 - **Buzzer ativo x passivo.** No teste de ligação o buzzer toca três tons (500, 1000 e 2000 Hz). Se os três tiverem o mesmo som, o buzzer é **ativo** e não serve: o projeto precisa do passivo para diferenciar os alertas.
 
-### Caixa impressa em 3D (bônus +2,0)
+### Caixa impressa em 3D
 
 Três peças sem parafusos, PLA: base e tampa em preto, cúpula em branco. Base 116 × 68 × 46 mm; caixa montada com cerca de 103 mm de altura.
 
@@ -154,7 +154,7 @@ Arquivos: [`hardware/caixa/`](hardware/caixa) — os três STLs, [`COMO_IMPRIMIR
 
 **Versão completa, no navegador do computador.** O arquivo [`modelo-3d-caixa.html`](hardware/caixa/modelo-3d-caixa.html) vai além do visualizador do GitHub: alterna **Montada** e **Aberta** (as três peças separadas), mostra o nome de cada furo, simula os três alertas com o LED piscando e baixa os STLs com as instruções de impressão em `.zip`. Os STLs estão embutidos em base64, então basta abrir o arquivo no navegador — pelo botão **Download** na página do GitHub, ou com duplo clique depois de baixar o repositório. O README não executa esse script porque o GitHub remove JavaScript de Markdown: por isso, direto na página do repositório, o que funciona é a prévia animada acima e o visualizador do `.glb`.
 
-Atende aos requisitos do bônus: caixa que protege o circuito, **sensores expostos**, **LED visível** pela cúpula e **buzzer audível** com a caixa fechada.
+A caixa protege o circuito e mantém os **sensores expostos**, o **LED visível** pela cúpula e o **buzzer audível** mesmo fechada.
 
 ## Limites e tabela de alertas
 
@@ -346,18 +346,18 @@ O repositório segue a divisão de pastas do Guia dos desenvolvedores: uma pasta
 
 ```text
 .
-├── README.md                            este documento — entrega principal
+├── README.md                            este documento
 ├── .gitignore                           mantém fora do Git bin/, obj/, .vs/, appsettings.json e secrets.h
 ├── alexa/skill-package/                 modelo de interação da skill "monitor cirúrgico" (pt-BR)
 ├── app/
 │   ├── README.md                        aplicação em detalhe: telas, endpoints, DAOs e supervisão
 │   ├── MonitorSalaCirurgica.sln         solução do Visual Studio
-│   └── MonitorSalaCirurgica/            ASP.NET Core MVC 3.1 — código comentado (D4)
+│   └── MonitorSalaCirurgica/            ASP.NET Core MVC 3.1 — código comentado
 ├── database/
 │   └── script.sql                       banco, tabelas, procedures e dados iniciais
 ├── docs/
 │   ├── arquitetura.md                   camadas, fluxos de dados e de comandos, portas
-│   ├── arquitetura.svg                  diagrama da arquitetura completa (D2)
+│   ├── arquitetura.svg                  diagrama da arquitetura completa
 │   ├── deploy-learner-lab.md            deploy no AWS Learner Lab passo a passo
 │   ├── alexa.md                         skill da Alexa: modelo, túnel HTTPS e segurança
 │   ├── circuito_n2.png                  esquema elétrico (DHT11, LDR, LED RGB, buzzer)
@@ -365,7 +365,7 @@ O repositório segue a divisão de pastas do Guia dos desenvolvedores: uma pasta
 │   └── guia-desenvolvedores.pdf         contrato entre as duas frentes (Prof. Cabrini)
 ├── firmware/
 │   └── sala_cirurgica/
-│       ├── sala_cirurgica.ino           firmware do ESP32 — código comentado (D3)
+│       ├── sala_cirurgica.ino           firmware do ESP32 — código comentado
 │       ├── config.h                     identidade no FIWARE, pinos, tempos e padrões de alerta
 │       ├── secrets.example.h            modelo do secrets.h (Wi-Fi e IP)
 │       └── README.md                    como gravar, mensagens MQTT e diagnóstico
@@ -395,8 +395,8 @@ Nunca vão para o repositório: `secrets.h` (Wi-Fi e IP), `appsettings.json` (IP
 
 ### Código comentado e documentado
 
-- **Device (D3)** — [`sala_cirurgica.ino`](firmware/sala_cirurgica/sala_cirurgica.ino): cabeçalho com contrato MQTT, pinos e padrões de alerta; blocos comentados para pinos/saídas PWM, padrões de alerta, conversão do LDR, leitura do DHT11, publicação, comandos, console de testes e conectividade. [`config.h`](firmware/sala_cirurgica/config.h) comenta cada constante.
-- **Front-end (D4)** — camada DAO ([`HelperFiware.cs`](app/MonitorSalaCirurgica/DAO/HelperFiware.cs), [`MensagemIoTDAO.cs`](app/MonitorSalaCirurgica/DAO/MensagemIoTDAO.cs), [`SalaDAO.cs`](app/MonitorSalaCirurgica/DAO/SalaDAO.cs)), endpoints ([`DashboardController.cs`](app/MonitorSalaCirurgica/Controllers/DashboardController.cs)), cálculo das médias e limites ([`AnaliseSala.cs`](app/MonitorSalaCirurgica/Services/AnaliseSala.cs)), envio dos comandos ([`Alarme.cs`](app/MonitorSalaCirurgica/Services/Alarme.cs)) e o javascript das telas ([`site.js`](app/MonitorSalaCirurgica/wwwroot/js/site.js)) — todos com comentários de intenção em português.
+- **Firmware** — [`sala_cirurgica.ino`](firmware/sala_cirurgica/sala_cirurgica.ino): cabeçalho com contrato MQTT, pinos e padrões de alerta; blocos comentados para pinos/saídas PWM, padrões de alerta, conversão do LDR, leitura do DHT11, publicação, comandos, console de testes e conectividade. [`config.h`](firmware/sala_cirurgica/config.h) comenta cada constante.
+- **Aplicação** — camada DAO ([`HelperFiware.cs`](app/MonitorSalaCirurgica/DAO/HelperFiware.cs), [`MensagemIoTDAO.cs`](app/MonitorSalaCirurgica/DAO/MensagemIoTDAO.cs), [`SalaDAO.cs`](app/MonitorSalaCirurgica/DAO/SalaDAO.cs)), endpoints ([`DashboardController.cs`](app/MonitorSalaCirurgica/Controllers/DashboardController.cs)), cálculo das médias e limites ([`AnaliseSala.cs`](app/MonitorSalaCirurgica/Services/AnaliseSala.cs)), envio dos comandos ([`Alarme.cs`](app/MonitorSalaCirurgica/Services/Alarme.cs)) e o javascript das telas ([`site.js`](app/MonitorSalaCirurgica/wwwroot/js/site.js)) — todos com comentários de intenção em português.
 
 ## Referências
 

@@ -83,7 +83,7 @@ Os perfis ficam na tabela `Limite` e são editados na tela **Limites**. O perfil
 
 O buzzer toca enquanto o LED está aceso. Com mais de uma grandeza fora, vale a de maior prioridade: com luz baixa **e** temperatura alta, a placa mostra `luz`. Quando as três voltam à faixa, LED e buzzer desligam.
 
-## Aplicação (Analista 1)
+## Aplicação
 
 ASP.NET Core MVC em [`MonitorSalaCirurgica/`](MonitorSalaCirurgica): solução `MonitorSalaCirurgica.sln` com o projeto ao lado, **em camadas: Controllers, DAO, Models e Views**.
 
@@ -94,20 +94,6 @@ ASP.NET Core MVC em [`MonitorSalaCirurgica/`](MonitorSalaCirurgica): solução `
 | Front-end | Bootstrap 4.3.1 e jQuery 3.5.1 (as versões fixas do projeto), mais o Chart.js para os gráficos |
 | JavaScript | Todo no `site.js`, com `$.ajax` |
 | C# | Síncrono: `HttpClient` com `.Result` e proxy opcional |
-
-### O que cada professor avalia e onde está
-
-| Pedido | Tela | Como |
-| --- | --- | --- |
-| LP · CRUDs direto no FIWARE via API (5,0) | **Salas** e **Inscrições** | `PadraoFiwareController` + `SalaDAO` (IoT Agent `/iot/devices`) e `InscricaoDAO` (Orion `/v2/subscriptions`) |
-| LP · Consulta das mensagens IoT via API e AJAX (2,0) | **Consulta IoT** | Consulta avançada com filtros: `ExibeConsultaAvancada`, `ObtemDadosConsultaAvancada` e a partial view `pvGridMensagens`, paginada pela API do STH-Comet |
-| LP · Dois gráficos em dashboard (3,0) | **Dashboard** | Gráfico 1: linhas por grandeza com os limites. Gráfico 2: histograma das leituras com as faixas fora do limite em vermelho |
-| LP · Modelo de dados e SQL | **Limites**, **Alertas** | Tabelas `Limite`, `ConfiguracaoSala` e `AlertaLog` com stored procedures (`database/script.sql`) |
-| SE · H2 FIWARE e dispositivo provisionado | **Salas**, **Conexão** | Grupo de serviço e dispositivo criados pela tela; health check dos três componentes |
-| SE · H3 Tempo real | **Dashboard** | Cartões e faixa do alerta atualizados por AJAX a cada 5 s, sem recarregar |
-| SE · H4 Histórico | **Dashboard**, **Consulta IoT** | Gráficos alimentados pela API do STH-Comet (dados no MongoDB) |
-| SE · H5 Triggers e alertas | `SupervisorService` | Médias × limites → `setAlert` ao ESP32; testes por grandeza na tela Salas |
-| SE · D4 Código do front-end | todo o projeto | Endpoints, médias, limites e comandos comentados |
 
 ### Telas
 
@@ -123,7 +109,7 @@ ASP.NET Core MVC em [`MonitorSalaCirurgica/`](MonitorSalaCirurgica): solução `
 | **Alexa** | Simulador da skill e teste dos anúncios | — |
 | **Conexão** | Health check dos três componentes e troca do IP da EC2 sem reiniciar | `GET /version`, `GET /iot/about` |
 
-### Supervisão automática (critério H5)
+### Supervisão automática
 
 O [`SupervisorService`](MonitorSalaCirurgica/Services/SupervisorService.cs) roda em segundo plano. A cada 10 s, para cada sala do IoT Agent:
 
@@ -157,7 +143,7 @@ O **teste** (botão ou Alexa, 15 s) e o **silêncio** (1 a 30 min) passam na fre
 | `Views/<Tela>/Index.cshtml` e `Form.cshtml` | Listagem e formulário (`action="Save"`, `ViewBag.Operacao`, `asp-validation-for`, código só leitura na alteração) | Razor com `asp-validation-for` |
 | `wwwroot/js/site.js` | Todas as funções javascript (`apagarRegistro`, `aplicaFiltroConsultaAvancada`, dashboard, simulador da Alexa) | tudo em um arquivo |
 
-## Banco de dados (Analista 1)
+## Banco de dados
 
 [`database/script.sql`](../database/script.sql) cria o banco `MonitorSalaCirurgica`. Pode ser executado de novo: apaga e recria tudo.
 
