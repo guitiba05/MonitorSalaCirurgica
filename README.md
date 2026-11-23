@@ -49,9 +49,9 @@ O ciclo completo:
 
 ## Arquitetura
 
-![Diagrama da arquitetura completa](monitor-sala-cirurgica/docs/arquitetura.svg)
+![Diagrama da arquitetura completa](docs/arquitetura.svg)
 
-Diagrama em [`monitor-sala-cirurgica/docs/arquitetura.svg`](monitor-sala-cirurgica/docs/arquitetura.svg), com as explicações camada por camada em [`arquitetura.md`](monitor-sala-cirurgica/docs/arquitetura.md). A seta parte sempre de quem inicia a conexão (padrão do FIWARE Made Simple).
+Diagrama em [`docs/arquitetura.svg`](docs/arquitetura.svg), com as explicações camada por camada em [`arquitetura.md`](docs/arquitetura.md). A seta parte sempre de quem inicia a conexão (padrão do FIWARE Made Simple).
 
 ### Camadas, componentes e portas
 
@@ -123,7 +123,7 @@ Diagrama em [`monitor-sala-cirurgica/docs/arquitetura.svg`](monitor-sala-cirurgi
 | Buzzer passivo | **GPIO 13** (D13) | D13 → resistor de 100 Ω → buzzer (+); buzzer (−) no GND |
 | LED da placa (status) | GPIO 2 | aceso = conectado ao FIWARE; piscando = offline |
 
-Esquema elétrico e foto da montagem: [`circuito_n2.png`](circuito_n2.png).
+Esquema elétrico e foto da montagem: [`circuito_n2.png`](docs/circuito_n2.png).
 
 Pontos de atenção:
 
@@ -144,7 +144,7 @@ Três peças sem parafusos, PLA: base e tampa em preto, cúpula em branco. Base 
 | ESP32 | berço interno | apoiado nas colunas, USB na abertura da lateral direita |
 | Mini protoboard | fundo, lado esquerdo | fita dupla-face que vem nela |
 
-Arquivos: [`N2_CABRINI_MODELO_3D/`](N2_CABRINI_MODELO_3D) — três STLs, [`COMO_IMPRIMIR.txt`](N2_CABRINI_MODELO_3D/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) com as configurações de fatiamento e a ordem de montagem, o gerador [`gerar_stls_n2.py`](N2_CABRINI_MODELO_3D/caixa-sala-cirurgica-stl/gerar_stls_n2.py) e o modelo 3D interativo em HTML, que simula o piscar de cada alerta.
+Arquivos: [`hardware/caixa/`](hardware/caixa) — três STLs, [`COMO_IMPRIMIR.txt`](hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) com as configurações de fatiamento e a ordem de montagem, o gerador [`gerar_stls_n2.py`](hardware/caixa/caixa-sala-cirurgica-stl/gerar_stls_n2.py) e o [`modelo 3D interativo`](hardware/caixa/modelo-3d-caixa.html), que traz os STLs embutidos e simula o piscar de cada alerta.
 
 Atende aos requisitos do bônus: caixa que protege o circuito, **sensores expostos**, **LED visível** pela cúpula e **buzzer audível** com a caixa fechada.
 
@@ -179,7 +179,7 @@ Regras que valem no firmware **e** na aplicação:
 
 ## Firmware do ESP32
 
-Código: [`n2 cabrini esp/sala_cirurgica.ino`](n2%20cabrini%20esp/sala_cirurgica.ino), com a configuração em [`config.h`](n2%20cabrini%20esp/config.h) e o modelo de segredos em [`secrets.example.h`](n2%20cabrini%20esp/secrets.example.h). O código é comentado por seção: pinos, conversão do LDR, tópicos MQTT e tratamento dos comandos.
+Código: [`firmware/sala_cirurgica/sala_cirurgica.ino`](firmware/sala_cirurgica/sala_cirurgica.ino), com a configuração em [`config.h`](firmware/sala_cirurgica/config.h) e o modelo de segredos em [`secrets.example.h`](firmware/sala_cirurgica/secrets.example.h). O código é comentado por seção: pinos, conversão do LDR, tópicos MQTT e tratamento dos comandos.
 
 ### Mensagens MQTT
 
@@ -207,11 +207,11 @@ A confirmação em `/cmdexe` é o que muda `setAlert_status` de `PENDING` para `
 | `status` | mostra as últimas medidas, o alerta em vigor, Wi-Fi e MQTT |
 | `teste` | repete o teste de ligação (cores do LED e três tons) |
 
-Detalhes, tabela de diagnóstico de erros: [`n2 cabrini esp/README.md`](n2%20cabrini%20esp/README.md).
+Detalhes, tabela de diagnóstico de erros: [`firmware/sala_cirurgica/README.md`](firmware/sala_cirurgica/README.md).
 
 ## Aplicação e banco de dados
 
-Código: [`monitor-sala-cirurgica/app/`](monitor-sala-cirurgica/app) (ASP.NET Core MVC 3.1, no padrão do CadAlunoMVC e da apostila de LP I). Banco: [`database/script.sql`](monitor-sala-cirurgica/database/script.sql).
+Código: [`app/`](app) — ASP.NET Core MVC 3.1 no padrão do CadAlunoMVC e da apostila de LP I. Banco: [`database/script.sql`](database/script.sql).
 
 ### Telas
 
@@ -254,11 +254,11 @@ Stored procedures no padrão do CadAluno: `spInsert_<Tabela>`, `spUpdate_<Tabela
 
 ### Skill da Alexa (extra)
 
-Skill **"monitor cirúrgico"** (pt-BR): consultar a sala, perguntar se há alerta e silenciar o alarme por N minutos, com confirmação antes de silenciar. Opcionalmente o Echo **anuncia sozinho** quando a supervisão dispara ou encerra um alerta. Configuração, túnel HTTPS e segurança em [`docs/alexa.md`](monitor-sala-cirurgica/docs/alexa.md).
+Skill **"monitor cirúrgico"** (pt-BR): consultar a sala, perguntar se há alerta e silenciar o alarme por N minutos, com confirmação antes de silenciar. Opcionalmente o Echo **anuncia sozinho** quando a supervisão dispara ou encerra um alerta. Configuração, túnel HTTPS e segurança em [`docs/alexa.md`](docs/alexa.md).
 
 ## Deploy no AWS Learner Lab
 
-O passo a passo completo, do zero, está em **[`monitor-sala-cirurgica/docs/deploy-learner-lab.md`](monitor-sala-cirurgica/docs/deploy-learner-lab.md)**: criação da instância EC2, Security Group porta por porta, instalação do Docker, `docker-compose up`, health check dos três componentes, provisionamento da sala (Postman e pela aplicação), testes e encerramento da sessão.
+O passo a passo completo, do zero, está em **[`docs/deploy-learner-lab.md`](docs/deploy-learner-lab.md)**: criação da instância EC2, Security Group porta por porta, instalação do Docker, `docker-compose up`, health check dos três componentes, provisionamento da sala (Postman e pela aplicação), testes e encerramento da sessão.
 
 Resumo da ordem:
 
@@ -283,7 +283,7 @@ Resumo da ordem:
 
 ### 1. Banco de dados
 
-Abra `monitor-sala-cirurgica/database/script.sql` no Visual Studio (Pesquisador de Objetos do SQL Server › `(localdb)\MSSQLLocalDB` › Nova Consulta) e execute. O script cria o banco, as tabelas, as procedures e os dados iniciais (perfis *Demonstração* e *Norma NBR 7256*, e a sala `sala01` já configurada).
+Abra `database/script.sql` no Visual Studio (Pesquisador de Objetos do SQL Server › `(localdb)\MSSQLLocalDB` › Nova Consulta) e execute. O script cria o banco, as tabelas, as procedures e os dados iniciais (perfis *Demonstração* e *Norma NBR 7256*, e a sala `sala01` já configurada).
 
 ### 2. Configuração da aplicação
 
@@ -299,7 +299,7 @@ Copie `app/MonitorSalaCirurgica/appsettings.example.json` para `appsettings.json
 
 ### 3. Executar a aplicação
 
-Abra `monitor-sala-cirurgica/app/MonitorSalaCirurgica.sln` e rode com **F5** (perfil *MonitorSalaCirurgica*, em `http://localhost:5000`). Entre com **`admin` / `1234`**.
+Abra `app/MonitorSalaCirurgica.sln` e rode com **F5** (perfil *MonitorSalaCirurgica*, em `http://localhost:5000`). Entre com **`admin` / `1234`**.
 
 1. **Conexão** — os três componentes devem aparecer em verde, com a versão.
 2. **Salas › Novo registro** — manter `sala01`, `urn:ngsi-ld:SalaCirurgica:001` e `CIRURGIA01`, com **Criar as três inscrições** marcado. Se a sala já foi cadastrada pelo Postman, ela aparece na lista e entra na supervisão automaticamente.
@@ -334,50 +334,57 @@ A entidade no Orion passa a mostrar os valores enviados e a supervisão reage a 
 
 ## Estrutura do repositório
 
+O repositório segue a divisão de pastas do Guia dos desenvolvedores: uma pasta por frente de trabalho (servidor e dispositivo), para os dois lados mexerem no mesmo repositório sem conflito.
+
 ```text
 .
-├── README.md                      ← este documento (entrega principal)
-├── circuito_n2.png                circuito elétrico (DHT11, LDR, LED RGB, buzzer)
-├── kickoff-n2-supervisao-iot.pdf  enunciado do N2 (Prof. Cabrini)
-├── Guia dos desenvolvedores ....pdf  contrato entre as duas frentes
-├── monitor-sala-cirurgica/
-│   ├── README.md                  detalhes da aplicação, do banco e das telas
-│   ├── app/MonitorSalaCirurgica/  aplicação ASP.NET Core MVC (código comentado)
-│   ├── database/script.sql        banco, tabelas, procedures e dados iniciais
-│   ├── docs/                      arquitetura (md + svg), deploy no Learner Lab, Alexa
-│   └── alexa/skill-package/       modelo de interação da skill (pt-BR)
-├── n2 cabrini esp/                firmware do ESP32 (sala_cirurgica.ino, config.h)
-└── N2_CABRINI_MODELO_3D/          caixa impressa em 3D (STLs, gerador, modelo interativo)
+├── README.md                            este documento — entrega principal
+├── .gitignore                           mantém fora do Git bin/, obj/, .vs/, appsettings.json e secrets.h
+├── alexa/skill-package/                 modelo de interação da skill "monitor cirúrgico" (pt-BR)
+├── app/
+│   ├── README.md                        aplicação em detalhe: telas, endpoints, DAOs e supervisão
+│   ├── MonitorSalaCirurgica.sln         solução do Visual Studio
+│   └── MonitorSalaCirurgica/            ASP.NET Core MVC 3.1 — código comentado (D4)
+├── database/
+│   └── script.sql                       banco, tabelas, procedures e dados iniciais
+├── docs/
+│   ├── arquitetura.md                   camadas, fluxos de dados e de comandos, portas
+│   ├── arquitetura.svg                  diagrama da arquitetura completa (D2)
+│   ├── deploy-learner-lab.md            deploy no AWS Learner Lab passo a passo
+│   ├── alexa.md                         skill da Alexa: modelo, túnel HTTPS e segurança
+│   ├── circuito_n2.png                  esquema elétrico (DHT11, LDR, LED RGB, buzzer)
+│   ├── enunciado-n2-supervisao-iot.pdf  enunciado do N2 (Prof. Cabrini)
+│   └── guia-desenvolvedores.pdf         contrato entre as duas frentes (Prof. Cabrini)
+├── firmware/
+│   └── sala_cirurgica/
+│       ├── sala_cirurgica.ino           firmware do ESP32 — código comentado (D3)
+│       ├── config.h                     identidade no FIWARE, pinos, tempos e padrões de alerta
+│       ├── secrets.example.h            modelo do secrets.h (Wi-Fi e IP)
+│       └── README.md                    como gravar, mensagens MQTT e diagnóstico
+└── hardware/
+    └── caixa/
+        ├── modelo-3d-caixa.html         modelo 3D interativo: STLs embutidos e simulação dos alertas
+        └── caixa-sala-cirurgica-stl/    as três peças, COMO_IMPRIMIR.txt e o gerador paramétrico
 ```
 
-O Guia dos desenvolvedores se refere a estas mesmas pastas por nomes de papel. A correspondência:
-
-| Papel no Guia | Onde está neste repositório |
-| --- | --- |
-| `app/MonitorSalaCirurgica/` | `monitor-sala-cirurgica/app/MonitorSalaCirurgica/` |
-| `database/` | `monitor-sala-cirurgica/database/` |
-| `docs/` (deploy, arquitetura, circuitos, fotos) | `monitor-sala-cirurgica/docs/` |
-| `firmware/sala_cirurgica/` | `n2 cabrini esp/` |
-| `hardware/caixa/` | `N2_CABRINI_MODELO_3D/` |
-
-Nunca vão para o repositório: `secrets.h` (Wi-Fi e IP), `appsettings.json` (IP e connection string) e as pastas de build (`bin/`, `obj/`, `.vs/`). No repositório ficam apenas `secrets.example.h` e `appsettings.example.json`.
+Nunca vão para o repositório: `secrets.h` (Wi-Fi e IP), `appsettings.json` (IP da EC2 e connection string) e as pastas de build (`bin/`, `obj/`, `.vs/`) — o `.gitignore` da raiz cuida disso. No repositório ficam só os modelos `secrets.example.h` e `appsettings.example.json`.
 
 ## Documentação complementar
 
 | Documento | Conteúdo |
 | --- | --- |
-| [`monitor-sala-cirurgica/docs/arquitetura.md`](monitor-sala-cirurgica/docs/arquitetura.md) | camadas, fluxo de dados (1–6), de comandos (A–C), provisionamento e Alexa, em detalhe |
-| [`monitor-sala-cirurgica/docs/arquitetura.svg`](monitor-sala-cirurgica/docs/arquitetura.svg) | diagrama da arquitetura completa (camadas, componentes, protocolos, portas, dados e comandos) |
-| [`monitor-sala-cirurgica/docs/deploy-learner-lab.md`](monitor-sala-cirurgica/docs/deploy-learner-lab.md) | deploy no AWS Learner Lab passo a passo, provisionamento e diagnóstico de problemas |
-| [`monitor-sala-cirurgica/docs/alexa.md`](monitor-sala-cirurgica/docs/alexa.md) | skill da Alexa: modelo de interação, túnel HTTPS, verificação de assinatura e anúncios |
-| [`monitor-sala-cirurgica/README.md`](monitor-sala-cirurgica/README.md) | aplicação: telas, endpoints, organização do código e equivalência com o CadAluno |
-| [`n2 cabrini esp/README.md`](n2%20cabrini%20esp/README.md) | firmware: pinagem, como gravar, mensagens MQTT, console de testes e diagnóstico |
-| [`N2_CABRINI_MODELO_3D/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt`](N2_CABRINI_MODELO_3D/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) | fatiamento das três peças e ordem de montagem da caixa |
+| [`docs/arquitetura.md`](docs/arquitetura.md) | camadas, fluxo de dados (1–6), de comandos (A–C), provisionamento e Alexa, em detalhe |
+| [`docs/arquitetura.svg`](docs/arquitetura.svg) | diagrama da arquitetura completa (camadas, componentes, protocolos, portas, dados e comandos) |
+| [`docs/deploy-learner-lab.md`](docs/deploy-learner-lab.md) | deploy no AWS Learner Lab passo a passo, provisionamento e diagnóstico de problemas |
+| [`docs/alexa.md`](docs/alexa.md) | skill da Alexa: modelo de interação, túnel HTTPS, verificação de assinatura e anúncios |
+| [`app/README.md`](app/README.md) | aplicação: telas, endpoints, organização do código e equivalência com o CadAluno |
+| [`firmware/sala_cirurgica/README.md`](firmware/sala_cirurgica/README.md) | firmware: pinagem, como gravar, mensagens MQTT, console de testes e diagnóstico |
+| [`hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt`](hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) | fatiamento das três peças e ordem de montagem da caixa |
 
 ### Código comentado e documentado
 
-- **Device (D3)** — [`sala_cirurgica.ino`](n2%20cabrini%20esp/sala_cirurgica.ino): cabeçalho com contrato MQTT, pinos e padrões de alerta; blocos comentados para pinos/saídas PWM, padrões de alerta, conversão do LDR, leitura do DHT11, publicação, comandos, console de testes e conectividade. [`config.h`](n2%20cabrini%20esp/config.h) comenta cada constante.
-- **Front-end (D4)** — camada DAO ([`HelperFiware.cs`](monitor-sala-cirurgica/app/MonitorSalaCirurgica/DAO/HelperFiware.cs), [`MensagemIoTDAO.cs`](monitor-sala-cirurgica/app/MonitorSalaCirurgica/DAO/MensagemIoTDAO.cs), [`SalaDAO.cs`](monitor-sala-cirurgica/app/MonitorSalaCirurgica/DAO/SalaDAO.cs)), endpoints ([`DashboardController.cs`](monitor-sala-cirurgica/app/MonitorSalaCirurgica/Controllers/DashboardController.cs)), cálculo das médias e limites ([`AnaliseSala.cs`](monitor-sala-cirurgica/app/MonitorSalaCirurgica/Services/AnaliseSala.cs)), envio dos comandos ([`Alarme.cs`](monitor-sala-cirurgica/app/MonitorSalaCirurgica/Services/Alarme.cs)) e o javascript das telas ([`site.js`](monitor-sala-cirurgica/app/MonitorSalaCirurgica/wwwroot/js/site.js)) — todos com comentários de intenção em português.
+- **Device (D3)** — [`sala_cirurgica.ino`](firmware/sala_cirurgica/sala_cirurgica.ino): cabeçalho com contrato MQTT, pinos e padrões de alerta; blocos comentados para pinos/saídas PWM, padrões de alerta, conversão do LDR, leitura do DHT11, publicação, comandos, console de testes e conectividade. [`config.h`](firmware/sala_cirurgica/config.h) comenta cada constante.
+- **Front-end (D4)** — camada DAO ([`HelperFiware.cs`](app/MonitorSalaCirurgica/DAO/HelperFiware.cs), [`MensagemIoTDAO.cs`](app/MonitorSalaCirurgica/DAO/MensagemIoTDAO.cs), [`SalaDAO.cs`](app/MonitorSalaCirurgica/DAO/SalaDAO.cs)), endpoints ([`DashboardController.cs`](app/MonitorSalaCirurgica/Controllers/DashboardController.cs)), cálculo das médias e limites ([`AnaliseSala.cs`](app/MonitorSalaCirurgica/Services/AnaliseSala.cs)), envio dos comandos ([`Alarme.cs`](app/MonitorSalaCirurgica/Services/Alarme.cs)) e o javascript das telas ([`site.js`](app/MonitorSalaCirurgica/wwwroot/js/site.js)) — todos com comentários de intenção em português.
 
 ## Referências
 

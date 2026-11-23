@@ -1,0 +1,24 @@
+# =====================================================================
+#  Monitor de Sala Cirúrgica — o que NÃO vai para o GitHub
+#  No repositório ficam apenas os modelos: appsettings.example.json
+#  e firmware/sala_cirurgica/secrets.example.h
+# =====================================================================
+
+# --- Segredos e IPs (mudam a cada sessão do Learner Lab) ---
+appsettings.json
+!appsettings.example.json
+secrets.h
+!secrets.example.h
+.env
+
+# --- Build do .NET e do Visual Studio ---
+bin/
+obj/
+.vs/
+*.suo
+*.mdf
+*.ldf
+
+# --- Sistema ---
+.DS_Store
+Thumbs.db

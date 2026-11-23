@@ -19,7 +19,7 @@ O ESP32 então pisca o LED azul e toca o buzzer num padrão diferente para cada 
 
 ## Arquitetura
 
-![Arquitetura](docs/arquitetura.svg)
+![Arquitetura](../docs/arquitetura.svg)
 
 Fluxo de dados (1 → 6) e de comandos (A → C). A seta parte de quem inicia a conexão.
 
@@ -36,7 +36,7 @@ Fluxo de dados (1 → 6) e de comandos (A → C). A seta parte de quem inicia a 
 | C | IoT Agent → Mosquitto → ESP32 | MQTT :1883 | `/CIRURGIA01/sala01/cmd` · `sala01@setAlert\|temp`; o ESP32 confirma em `/cmdexe` |
 | P | Aplicação → IoT Agent | HTTP :4041 | `/iot/services` e `/iot/devices` (tela Salas) |
 
-A aplicação **nunca fala direto com o ESP32**. Detalhes de cada camada em [`docs/arquitetura.md`](docs/arquitetura.md).
+A aplicação **nunca fala direto com o ESP32**. Detalhes de cada camada em [`docs/arquitetura.md`](../docs/arquitetura.md).
 
 ## Componentes e pinagem
 
@@ -85,7 +85,7 @@ O buzzer toca enquanto o LED está aceso. Com mais de uma grandeza fora, vale a 
 
 ## Aplicação (Analista 1)
 
-ASP.NET Core MVC em [`app/`](app): solução `MonitorSalaCirurgica.sln` com o projeto ao lado, **no mesmo padrão do CadAlunoMVC e da apostila de LP I**.
+ASP.NET Core MVC em [`MonitorSalaCirurgica/`](MonitorSalaCirurgica): solução `MonitorSalaCirurgica.sln` com o projeto ao lado, **no mesmo padrão do CadAlunoMVC e da apostila de LP I**.
 
 | Item | Escolha |
 | --- | --- |
@@ -125,12 +125,12 @@ ASP.NET Core MVC em [`app/`](app): solução `MonitorSalaCirurgica.sln` com o pr
 
 ### Supervisão automática (critério H5)
 
-O [`SupervisorService`](app/MonitorSalaCirurgica/Services/SupervisorService.cs) roda em segundo plano. A cada 10 s, para cada sala do IoT Agent:
+O [`SupervisorService`](MonitorSalaCirurgica/Services/SupervisorService.cs) roda em segundo plano. A cada 10 s, para cada sala do IoT Agent:
 
 1. **Média da janela**: busca no STH-Comet as medidas de `agora − janela` até agora e calcula a média. Sem pontos na janela, usa o valor atual do Orion.
-2. **Limites**: compara cada média com a faixa do perfil ativo, com histerese ([`AnaliseSala`](app/MonitorSalaCirurgica/Services/AnaliseSala.cs)).
+2. **Limites**: compara cada média com a faixa do perfil ativo, com histerese ([`AnaliseSala`](MonitorSalaCirurgica/Services/AnaliseSala.cs)).
 3. **Prioridade**: escolhe `luz` > `temp` > `umid`, ou `off` se tudo está normal.
-4. **Comando**: envia `setAlert` **só quando o alerta muda** ([`Alarme`](app/MonitorSalaCirurgica/Services/Alarme.cs)).
+4. **Comando**: envia `setAlert` **só quando o alerta muda** ([`Alarme`](MonitorSalaCirurgica/Services/Alarme.cs)).
 5. **Confirmação**: se o atributo `alert` do Orion (publicado pelo ESP32) não ficar igual em 10 s, reenvia.
 6. **Registro**: grava tudo no `AlertaLog` (Enviado → Confirmado, Reenviado ou Falha).
 
@@ -159,7 +159,7 @@ O **teste** (botão ou Alexa, 15 s) e o **silêncio** (1 a 30 min) passam na fre
 
 ## Banco de dados (Analista 1)
 
-[`database/script.sql`](database/script.sql) cria o banco `MonitorSalaCirurgica`. Pode ser executado de novo: apaga e recria tudo.
+[`database/script.sql`](../database/script.sql) cria o banco `MonitorSalaCirurgica`. Pode ser executado de novo: apaga e recria tudo.
 
 | Tabela | Conteúdo |
 | --- | --- |
@@ -171,7 +171,7 @@ Procedures no padrão do CadAluno: `spInsert_<Tabela>`, `spUpdate_<Tabela>`, `sp
 
 ## FIWARE na AWS
 
-O FIWARE roda numa EC2 do AWS Learner Lab com o [FIWARE Descomplicado](https://github.com/fabiocabrini/fiware): Orion 3.11.0, IoT Agent UltraLight, STH-Comet, Mosquitto e dois MongoDB (contexto na rede interna e histórico com senha). O passo a passo completo do deploy, do zero, está em [`docs/deploy-learner-lab.md`](docs/deploy-learner-lab.md).
+O FIWARE roda numa EC2 do AWS Learner Lab com o [FIWARE Descomplicado](https://github.com/fabiocabrini/fiware): Orion 3.11.0, IoT Agent UltraLight, STH-Comet, Mosquitto e dois MongoDB (contexto na rede interna e histórico com senha). O passo a passo completo do deploy, do zero, está em [`docs/deploy-learner-lab.md`](../docs/deploy-learner-lab.md).
 
 O que a aplicação precisa da EC2:
 
@@ -195,14 +195,14 @@ Skill personalizada **"monitor cirúrgico"** (pt-BR). Exemplos:
 - "Alexa, pergunte ao monitor cirúrgico se tem algum alerta."
 - "Alexa, peça ao monitor cirúrgico para silenciar o alarme por cinco minutos."
 
-A skill pede confirmação antes de silenciar. Ela usa os mesmos dados do dashboard e, como o resto da aplicação, só fala com o Orion. Opcionalmente, o Echo **anuncia sozinho** quando a supervisão dispara um alerta. Configuração, túnel HTTPS (ngrok) e segurança em [`docs/alexa.md`](docs/alexa.md).
+A skill pede confirmação antes de silenciar. Ela usa os mesmos dados do dashboard e, como o resto da aplicação, só fala com o Orion. Opcionalmente, o Echo **anuncia sozinho** quando a supervisão dispara um alerta. Configuração, túnel HTTPS (ngrok) e segurança em [`docs/alexa.md`](../docs/alexa.md).
 
 ## Como executar a aplicação
 
 Requisitos: Visual Studio 2019 ou 2022 com o **SDK do .NET Core 3.1** (o mesmo do CadAluno) e o SQL Server LocalDB. No VS 2022, se o projeto não abrir, instale o componente ".NET Core 3.1" no Visual Studio Installer.
 
-1. **Banco**: abra `database/script.sql` no Visual Studio (Pesquisador de Objetos do SQL Server › `(localdb)\MSSQLLocalDB` › Nova Consulta) e execute.
-2. **Configuração**: copie `app/MonitorSalaCirurgica/appsettings.example.json` para `appsettings.json` (fica fora do GitHub) e preencha `Fiware:Host` com o IP público da EC2. Se o banco não for o LocalDB, ajuste `ConnectionStrings:BancoSQL`.
+1. **Banco**: abra `../database/script.sql` no Visual Studio (Pesquisador de Objetos do SQL Server › `(localdb)\MSSQLLocalDB` › Nova Consulta) e execute.
+2. **Configuração**: copie `MonitorSalaCirurgica/appsettings.example.json` para `appsettings.json` (fica fora do GitHub) e preencha `Fiware:Host` com o IP público da EC2. Se o banco não for o LocalDB, ajuste `ConnectionStrings:BancoSQL`.
 3. **Executar**: abra `app/MonitorSalaCirurgica.sln` e rode com F5 (perfil **MonitorSalaCirurgica**, em `http://localhost:5000`). Entre com `admin` / `1234`.
 4. **Conferir**: em **Conexão**, os três componentes devem aparecer em verde com a versão.
 5. **Cadastrar a sala**: em **Salas › Novo registro**, mantenha `sala01`, `urn:ngsi-ld:SalaCirurgica:001` e `CIRURGIA01` e deixe marcado "Criar as três inscrições". Se a sala já foi cadastrada pelo Postman, ela aparece na lista e entra na supervisão automaticamente.
