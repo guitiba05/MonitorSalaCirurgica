@@ -1,5 +1,5 @@
 // =====================================================================
-//  Monitor de Sala Cirúrgica: todas as funções javascript (como na apostila),
+//  Monitor de Sala Cirúrgica: todas as funções javascript,
 //  organizadas por tela. As chamadas ao servidor usam $.ajax do jQuery.
 // =====================================================================
 
@@ -7,7 +7,7 @@
 //  Funções gerais
 // ---------------------------------------------------------------------
 
-// Excluir com confirmação (mesma ideia do apagarAluno do CadAluno)
+// Excluir com confirmação antes de apagar
 function apagarRegistro(controller, id, descricao) {
     if (confirm('Confirma a exclusão de ' + descricao + '?'))
         location.href = '/' + controller + '/Delete?id=' + encodeURIComponent(id);
@@ -89,7 +89,7 @@ function sugereEntidade() {
 }
 
 // ---------------------------------------------------------------------
-//  Consulta de mensagens IoT (consulta avançada do capítulo 36)
+//  Consulta de mensagens IoT (consulta avançada com filtros)
 // ---------------------------------------------------------------------
 function paraCampoData(d) {     // Date -> valor de <input type="datetime-local">
     function dois(n) { return (n < 10 ? '0' : '') + n; }

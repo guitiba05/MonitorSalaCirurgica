@@ -1,5 +1,5 @@
 /* =====================================================================
-   Monitor de Sala Cirúrgica: ajustes visuais sobre o Bootstrap 4 (o mesmo do CadAluno)
+   Monitor de Sala Cirúrgica: ajustes visuais sobre o Bootstrap 4
    ===================================================================== */
 :root {
   --fundo: #f3f6f8;
@@ -55,7 +55,7 @@ code { color: var(--marca-escura); }
 .page-link { color: var(--marca); }
 .custom-control-input:checked ~ .custom-control-label::before { background: var(--marca); border-color: var(--marca); }
 
-/* consulta avançada (capítulo 36 da apostila) */
+/* consulta avançada com filtros */
 fieldset { margin: 0 0 20px; padding: 10px 15px 15px; border: 1px solid var(--linha); border-radius: 8px; background: #fff; }
 legend { width: auto; padding: 2px 6px; font-size: 1rem; font-weight: 600; margin-bottom: 0; }
 

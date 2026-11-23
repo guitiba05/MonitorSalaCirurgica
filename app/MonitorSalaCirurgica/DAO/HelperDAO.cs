@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 
 namespace MonitorSalaCirurgica.DAO
 {
-    /// <summary>Execução das stored procedures (mesmo HelperDAO do CadAluno)</summary>
+    /// <summary>Execução das stored procedures (centraliza a execução das stored procedures)</summary>
     static class HelperDAO
     {
         public static object NullAsDbNull(object valor)

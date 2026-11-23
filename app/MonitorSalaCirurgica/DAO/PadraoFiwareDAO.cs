@@ -7,9 +7,9 @@ using System.Net.Http;
 namespace MonitorSalaCirurgica.DAO
 {
     /// <summary>
-    /// DAO genérico para recursos gravados direto no FIWARE via API (mesma ideia do PadraoDAO do
-    /// CadAluno): a URL da coleção faz o papel da tabela, CriaJson o papel do CriaParametros e
-    /// MontaModel o mesmo papel do PadraoDAO. Os métodos são virtuais para cada API ajustar o formato.
+    /// DAO genérico para recursos gravados direto no FIWARE via API: a URL da coleção faz o
+    /// papel da tabela, CriaJson o papel do CriaParametros e MontaModel o papel do MontaModel.
+    /// Os métodos são virtuais para cada API ajustar o formato.
     /// </summary>
     public abstract class PadraoFiwareDAO<T> where T : PadraoFiwareViewModel
     {

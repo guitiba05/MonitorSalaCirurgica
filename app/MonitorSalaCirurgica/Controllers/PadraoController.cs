@@ -7,7 +7,7 @@ using System.Linq;
 namespace MonitorSalaCirurgica.Controllers
 {
     /// <summary>
-    /// CRUD genérico sobre o SQL Server (mesmo PadraoController do CadAluno):
+    /// CRUD genérico sobre o SQL Server do projeto:
     /// Index, Create, Save(model, Operacao), Edit, Delete, ValidaDados e controle de login.
     /// </summary>
     public class PadraoController<T> : BaseController where T : PadraoViewModel

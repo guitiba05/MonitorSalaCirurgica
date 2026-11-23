@@ -219,7 +219,7 @@ Detalhes, tabela de diagnóstico de erros: [`firmware/sala_cirurgica/README.md`]
 
 ## Aplicação e banco de dados
 
-Código: [`app/`](app) — ASP.NET Core MVC 3.1 no padrão do CadAlunoMVC e da apostila de LP I. Banco: [`database/script.sql`](database/script.sql).
+Código: [`app/`](app) — ASP.NET Core MVC 3.1 em camadas (Controllers, DAO, Models e Views). Banco: [`database/script.sql`](database/script.sql).
 
 ### Telas
 
@@ -258,7 +258,7 @@ Teste manual (botão da tela Salas ou Alexa, 15 s) e silêncio (1 a 30 min) pass
 | `ConfiguracaoSala` | para cada `device_id`: nome, perfil ativo, janela da média (10–3600 s), supervisão ligada |
 | `AlertaLog` | cada comando: data e hora, sala, alerta, origem (Supervisão, Teste, Alexa, Silêncio), motivo e situação |
 
-Stored procedures no padrão do CadAluno: `spInsert_<Tabela>`, `spUpdate_<Tabela>`, `spDelete`, `spConsulta`, `spListagem`, `spProximoId`, além de `spListagemLimitesPorPerfil`, `spListagemPerfis`, `spConsultaConfiguracaoPorDevice` e `spConsultaAvancadaAlertas`.
+Stored procedures com nomes padronizados: `spInsert_<Tabela>`, `spUpdate_<Tabela>`, `spDelete`, `spConsulta`, `spListagem`, `spProximoId`, além de `spListagemLimitesPorPerfil`, `spListagemPerfis`, `spConsultaConfiguracaoPorDevice` e `spConsultaAvancadaAlertas`.
 
 ### Skill da Alexa (extra)
 
@@ -286,7 +286,7 @@ Resumo da ordem:
 ### Pré-requisitos
 
 - **FIWARE**: uma instância EC2 do Learner Lab com os containers no ar (seção acima).
-- **Aplicação**: Visual Studio 2019 ou 2022 com o **SDK do .NET Core 3.1** (o mesmo do CadAluno) e o SQL Server LocalDB. No VS 2022, se o projeto não abrir, instale o componente ".NET Core 3.1" no Visual Studio Installer.
+- **Aplicação**: Visual Studio 2019 ou 2022 com o **SDK do .NET Core 3.1** e o SQL Server LocalDB. No VS 2022, se o projeto não abrir, instale o componente ".NET Core 3.1" no Visual Studio Installer.
 - **Dispositivo**: Arduino IDE com o pacote ESP32 e as três bibliotecas já citadas.
 
 ### 1. Banco de dados
@@ -387,7 +387,7 @@ Nunca vão para o repositório: `secrets.h` (Wi-Fi e IP), `appsettings.json` (IP
 | [`docs/arquitetura.svg`](docs/arquitetura.svg) | diagrama da arquitetura completa (camadas, componentes, protocolos, portas, dados e comandos) |
 | [`docs/deploy-learner-lab.md`](docs/deploy-learner-lab.md) | deploy no AWS Learner Lab passo a passo, provisionamento e diagnóstico de problemas |
 | [`docs/alexa.md`](docs/alexa.md) | skill da Alexa: modelo de interação, túnel HTTPS, verificação de assinatura e anúncios |
-| [`app/README.md`](app/README.md) | aplicação: telas, endpoints, organização do código e equivalência com o CadAluno |
+| [`app/README.md`](app/README.md) | aplicação: telas, endpoints, organização do código e o papel de cada arquivo |
 | [`firmware/sala_cirurgica/README.md`](firmware/sala_cirurgica/README.md) | firmware: pinagem, como gravar, mensagens MQTT, console de testes e diagnóstico |
 | [`hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt`](hardware/caixa/caixa-sala-cirurgica-stl/COMO_IMPRIMIR.txt) | fatiamento das três peças e ordem de montagem da caixa |
 | [`hardware/caixa/modelo-3d-caixa.html`](hardware/caixa/modelo-3d-caixa.html) | modelo 3D interativo da caixa: girar, montar/abrir, legendas dos furos e simulação dos alertas |

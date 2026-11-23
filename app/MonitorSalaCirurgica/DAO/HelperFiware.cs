@@ -45,8 +45,8 @@ namespace MonitorSalaCirurgica.DAO
 
     /// <summary>
     /// Centraliza as chamadas às APIs do FIWARE (IoT Agent :4041, Orion :1026 e STH-Comet :8666),
-    /// do mesmo modo que o HelperDAO centraliza o acesso ao banco. O consumo de API segue o
-    /// capítulo 37 da apostila: HttpClient com .Result e proxy opcional.
+    /// do mesmo modo que o HelperDAO centraliza o acesso ao banco. O consumo de API usa
+    /// HttpClient com .Result e proxy opcional.
     /// A aplicação NUNCA fala direto com o ESP32.
     /// </summary>
     public static class HelperFiware

@@ -85,22 +85,22 @@ O buzzer toca enquanto o LED está aceso. Com mais de uma grandeza fora, vale a 
 
 ## Aplicação (Analista 1)
 
-ASP.NET Core MVC em [`MonitorSalaCirurgica/`](MonitorSalaCirurgica): solução `MonitorSalaCirurgica.sln` com o projeto ao lado, **no mesmo padrão do CadAlunoMVC e da apostila de LP I**.
+ASP.NET Core MVC em [`MonitorSalaCirurgica/`](MonitorSalaCirurgica): solução `MonitorSalaCirurgica.sln` com o projeto ao lado, **em camadas: Controllers, DAO, Models e Views**.
 
 | Item | Escolha |
 | --- | --- |
 | .NET | `netcoreapp3.1`, com `Program.cs`, `Startup.cs` e Session (login `admin` / `1234`) |
-| Pacotes | Os do CadAluno: RuntimeCompilation 3.1.32, CodeGeneration.Design 3.1.5, Newtonsoft.Json 13.0.3 e System.Data.SqlClient 4.8.5 |
-| Front-end | Bootstrap 4.3.1 e jQuery 3.5.1 (as versões do CadAluno), mais o Chart.js para os gráficos |
-| JavaScript | Todo no `site.js`, com `$.ajax` como nos capítulos 36 e 37 |
-| C# | Síncrono, como na apostila: `HttpClient` com `.Result` e proxy opcional (cap. 37) |
+| Pacotes | RuntimeCompilation 3.1.32, CodeGeneration.Design 3.1.5, Newtonsoft.Json 13.0.3 e System.Data.SqlClient 4.8.5 |
+| Front-end | Bootstrap 4.3.1 e jQuery 3.5.1 (as versões fixas do projeto), mais o Chart.js para os gráficos |
+| JavaScript | Todo no `site.js`, com `$.ajax` |
+| C# | Síncrono: `HttpClient` com `.Result` e proxy opcional |
 
 ### O que cada professor avalia e onde está
 
 | Pedido | Tela | Como |
 | --- | --- | --- |
 | LP · CRUDs direto no FIWARE via API (5,0) | **Salas** e **Inscrições** | `PadraoFiwareController` + `SalaDAO` (IoT Agent `/iot/devices`) e `InscricaoDAO` (Orion `/v2/subscriptions`) |
-| LP · Consulta das mensagens IoT via API e AJAX (2,0) | **Consulta IoT** | Consulta avançada do cap. 36: `ExibeConsultaAvancada`, `ObtemDadosConsultaAvancada` e a partial view `pvGridMensagens`, paginada pela API do STH-Comet |
+| LP · Consulta das mensagens IoT via API e AJAX (2,0) | **Consulta IoT** | Consulta avançada com filtros: `ExibeConsultaAvancada`, `ObtemDadosConsultaAvancada` e a partial view `pvGridMensagens`, paginada pela API do STH-Comet |
 | LP · Dois gráficos em dashboard (3,0) | **Dashboard** | Gráfico 1: linhas por grandeza com os limites. Gráfico 2: histograma das leituras com as faixas fora do limite em vermelho |
 | LP · Modelo de dados e SQL | **Limites**, **Alertas** | Tabelas `Limite`, `ConfiguracaoSala` e `AlertaLog` com stored procedures (`database/script.sql`) |
 | SE · H2 FIWARE e dispositivo provisionado | **Salas**, **Conexão** | Grupo de serviço e dispositivo criados pela tela; health check dos três componentes |
@@ -118,7 +118,7 @@ ASP.NET Core MVC em [`MonitorSalaCirurgica/`](MonitorSalaCirurgica): solução `
 | **Salas** | CRUD das salas + configuração (nome, perfil, janela, supervisão) e botões para testar cada alerta | `POST /iot/services`, `GET/POST /iot/devices`, `PUT/DELETE /iot/devices/{id}`, `PATCH` setAlert |
 | **Inscrições** | CRUD das inscrições Orion → STH-Comet, uma por grandeza (formato 2.6, `httpCustom`), sem duplicar | `GET/POST /v2/subscriptions`, `PATCH/DELETE /v2/subscriptions/{id}` |
 | **Consulta IoT** | Medidas por sala, grandeza e período, paginadas | `GET /STH/v1/...?dateFrom&dateTo&hLimit&hOffset&count=true` |
-| **Limites** | CRUD da tabela `Limite` (perfis), com código gerado por `spProximoId` como no CadAluno | — |
+| **Limites** | CRUD da tabela `Limite` (perfis), com código gerado por `spProximoId` | — |
 | **Alertas** | Histórico de cada `setAlert` (tabela `AlertaLog`), com filtros | — |
 | **Alexa** | Simulador da skill e teste dos anúncios | — |
 | **Conexão** | Health check dos três componentes e troca do IP da EC2 sem reiniciar | `GET /version`, `GET /iot/about` |
@@ -136,26 +136,26 @@ O [`SupervisorService`](MonitorSalaCirurgica/Services/SupervisorService.cs) roda
 
 O **teste** (botão ou Alexa, 15 s) e o **silêncio** (1 a 30 min) passam na frente do cálculo enquanto valem. Depois, a supervisão volta sozinha.
 
-### Organização do código (equivalência com o CadAluno)
+### Organização do código
 
-| Arquivo | Papel | Equivale no CadAluno a |
+| Arquivo | Papel | Detalhe |
 | --- | --- | --- |
-| `DAO/ConexaoBD.cs`, `DAO/HelperDAO.cs`, `DAO/PadraoDAO.cs` | Acesso ao SQL Server por stored procedures | os mesmos arquivos |
-| `DAO/LimiteDAO.cs`, `ConfiguracaoSalaDAO.cs`, `AlertaLogDAO.cs` | Tabelas do banco | `AlunoDAO`, `CidadeDAO` |
-| `DAO/ConfigFiware.cs` | Endereço, portas, `fiware-service` e proxy (lidos do appsettings.json) | `ConexaoBD` |
-| `DAO/HelperFiware.cs` | Executa as chamadas às APIs do FIWARE (cap. 37) e traduz os erros | `HelperDAO` |
-| `DAO/PadraoFiwareDAO.cs` | CRUD genérico de um recurso do FIWARE: a URL da coleção faz o papel da tabela | `PadraoDAO` |
-| `DAO/SalaDAO.cs`, `InscricaoDAO.cs` | Salas no IoT Agent e inscrições no Orion | `AlunoDAO` |
+| `DAO/ConexaoBD.cs`, `DAO/HelperDAO.cs`, `DAO/PadraoDAO.cs` | Acesso ao SQL Server por stored procedures | helpers reutilizados por todos os DAOs |
+| `DAO/LimiteDAO.cs`, `ConfiguracaoSalaDAO.cs`, `AlertaLogDAO.cs` | Tabelas do banco | um DAO por tabela |
+| `DAO/ConfigFiware.cs` | Endereço, portas, `fiware-service` e proxy (lidos do appsettings.json) | endereço e portas configuráveis |
+| `DAO/HelperFiware.cs` | Executa as chamadas às APIs do FIWARE e traduz os erros | centraliza as chamadas HTTP |
+| `DAO/PadraoFiwareDAO.cs` | CRUD genérico de um recurso do FIWARE: a URL da coleção faz o papel da tabela | genérico: a URL é a coleção |
+| `DAO/SalaDAO.cs`, `InscricaoDAO.cs` | Salas no IoT Agent e inscrições no Orion | CRUD direto na API |
 | `DAO/EntidadeSalaDAO.cs`, `MensagemIoTDAO.cs` | Estado e comando no Orion; histórico no STH-Comet | – |
-| `Controllers/PadraoController.cs` | Index, Create, Save(model, Operacao), Edit, Delete, ValidaDados (SQL) | `PadraoController` |
-| `Controllers/PadraoFiwareController.cs` | O mesmo para os CRUDs no FIWARE (chave texto) | `PadraoController` |
-| `Controllers/BaseController.cs`, `HelperControllers.cs`, `LoginController.cs` | Login por sessão (`OnActionExecuting`) | os mesmos |
-| `Controllers/SalaController.cs`, `InscricaoController.cs`, `LimiteController.cs` | CRUDs | `AlunoController`, `CidadeController` |
-| `Controllers/MensagemController.cs` + `Views/Mensagem/pvGridMensagens.cshtml` | Consulta via AJAX com partial view | consulta avançada do cap. 36 |
+| `Controllers/PadraoController.cs` | Index, Create, Save(model, Operacao), Edit, Delete, ValidaDados (SQL) | CRUD padrão |
+| `Controllers/PadraoFiwareController.cs` | O mesmo para os CRUDs no FIWARE (chave texto) | mesmo fluxo, chave texto |
+| `Controllers/BaseController.cs`, `HelperControllers.cs`, `LoginController.cs` | Login por sessão (`OnActionExecuting`) | validação por sessão |
+| `Controllers/SalaController.cs`, `InscricaoController.cs`, `LimiteController.cs` | CRUDs | CRUDs específicos |
+| `Controllers/MensagemController.cs` + `Views/Mensagem/pvGridMensagens.cshtml` | Consulta via AJAX com partial view | partial view paginada |
 | `Controllers/DashboardController.cs` | Dashboard e JSON para os gráficos | – |
 | `Services/` | Supervisão automática (`SupervisorService`, `AnaliseSala`, `Alarme`) e Alexa | – |
-| `Views/<Tela>/Index.cshtml` e `Form.cshtml` | Listagem e formulário (`action="Save"`, `ViewBag.Operacao`, `asp-validation-for`, código só leitura na alteração) | mesmas views |
-| `wwwroot/js/site.js` | Todas as funções javascript (`apagarRegistro`, `aplicaFiltroConsultaAvancada`, dashboard, simulador da Alexa) | `site.js` |
+| `Views/<Tela>/Index.cshtml` e `Form.cshtml` | Listagem e formulário (`action="Save"`, `ViewBag.Operacao`, `asp-validation-for`, código só leitura na alteração) | Razor com `asp-validation-for` |
+| `wwwroot/js/site.js` | Todas as funções javascript (`apagarRegistro`, `aplicaFiltroConsultaAvancada`, dashboard, simulador da Alexa) | tudo em um arquivo |
 
 ## Banco de dados (Analista 1)
 
@@ -167,7 +167,7 @@ O **teste** (botão ou Alexa, 15 s) e o **silêncio** (1 a 30 min) passam na fre
 | `ConfiguracaoSala` | Para cada `device_id`: nome, perfil ativo, janela da média (10–3600 s), supervisão ligada |
 | `AlertaLog` | Cada comando: data e hora, sala, alerta, origem (Supervisão, Teste, Alexa, Silêncio), motivo, situação |
 
-Procedures no padrão do CadAluno: `spInsert_<Tabela>`, `spUpdate_<Tabela>`, `spDelete`, `spConsulta`, `spListagem` e `spProximoId` (genéricas), além de `spListagemLimitesPorPerfil`, `spListagemPerfis`, `spConsultaConfiguracaoPorDevice` e `spConsultaAvancadaAlertas`.
+Procedures com nomes padronizados: `spInsert_<Tabela>`, `spUpdate_<Tabela>`, `spDelete`, `spConsulta`, `spListagem` e `spProximoId` (genéricas), além de `spListagemLimitesPorPerfil`, `spListagemPerfis`, `spConsultaConfiguracaoPorDevice` e `spConsultaAvancadaAlertas`.
 
 ## FIWARE na AWS
 
@@ -199,7 +199,7 @@ A skill pede confirmação antes de silenciar. Ela usa os mesmos dados do dashbo
 
 ## Como executar a aplicação
 
-Requisitos: Visual Studio 2019 ou 2022 com o **SDK do .NET Core 3.1** (o mesmo do CadAluno) e o SQL Server LocalDB. No VS 2022, se o projeto não abrir, instale o componente ".NET Core 3.1" no Visual Studio Installer.
+Requisitos: Visual Studio 2019 ou 2022 com o **SDK do .NET Core 3.1** e o SQL Server LocalDB. No VS 2022, se o projeto não abrir, instale o componente ".NET Core 3.1" no Visual Studio Installer.
 
 1. **Banco**: abra `../database/script.sql` no Visual Studio (Pesquisador de Objetos do SQL Server › `(localdb)\MSSQLLocalDB` › Nova Consulta) e execute.
 2. **Configuração**: copie `MonitorSalaCirurgica/appsettings.example.json` para `appsettings.json` (fica fora do GitHub) e preencha `Fiware:Host` com o IP público da EC2. Se o banco não for o LocalDB, ajuste `ConnectionStrings:BancoSQL`.

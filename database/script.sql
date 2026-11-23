@@ -2,7 +2,7 @@
    Monitor de Sala Cirúrgica: banco SQL Server
    ---------------------------------------------------------------------
    Cria o banco, as três tabelas (Limite, ConfiguracaoSala, AlertaLog),
-   as stored procedures usadas pelos DAOs (mesmo padrão do CadAluno:
+   as stored procedures usadas pelos DAOs (padrões:
    spInsert_Tabela, spUpdate_Tabela, spDelete, spConsulta, spListagem e
    spProximoId) e os dados iniciais (perfis "Norma NBR 7256" e "Demonstração").
 
@@ -39,7 +39,7 @@ GO
 -- Um perfil tem exatamente uma linha por grandeza (UNIQUE Perfil + Grandeza).
 -- Histerese: margem para SAIR do alerta. Ex.: máximo 28 °C e histerese 0,5:
 --   entra em alerta com média > 28,0 e só sai com média <= 27,5.
--- O Id é gerado pela aplicação (spProximoId), como o código do aluno no CadAluno.
+-- O Id é gerado pela aplicação (spProximoId), como a chave dos demais cadastros.
 CREATE TABLE Limite (
     Id        INT           NOT NULL PRIMARY KEY,
     Perfil    NVARCHAR(50)  NOT NULL,
@@ -84,7 +84,7 @@ CREATE INDEX IX_AlertaLog_Device_Data ON AlertaLog (DeviceId, DataHora DESC);
 GO
 
 /* =====================================================================
-   PROCEDURES GENÉRICAS (usadas pelo PadraoDAO, iguais às do CadAluno)
+   PROCEDURES GENÉRICAS (usadas pelo PadraoDAO, iguais para todas as tabelas)
    O nome da tabela vem sempre do código (SetTabela do DAO); mesmo assim,
    as procedures conferem se a tabela existe e usam QUOTENAME.
    ===================================================================== */
@@ -239,7 +239,7 @@ BEGIN
 END
 GO
 
--- Histórico de alertas com filtros opcionais (NULL = sem filtro), como a consulta avançada da apostila
+-- Histórico de alertas com filtros opcionais (NULL = sem filtro), como uma consulta avançada com filtros
 CREATE PROCEDURE spConsultaAvancadaAlertas
     (@deviceId VARCHAR(50), @origem NVARCHAR(20), @dataInicial DATETIME2(0), @dataFinal DATETIME2(0))
 AS

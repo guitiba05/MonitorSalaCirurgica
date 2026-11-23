@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 namespace MonitorSalaCirurgica.DAO
 {
     /// <summary>
-    /// DAO genérico do SQL Server (mesmo PadraoDAO do CadAluno). Cada DAO concreto diz a tabela e
+    /// DAO genérico do SQL Server (DAO genérico do projeto). Cada DAO concreto diz a tabela e
     /// como converter entre o ViewModel e os parâmetros/linhas. Procedures: spInsert_Tabela,
     /// spUpdate_Tabela, spDelete, spConsulta, spListagem e spProximoId.
     /// </summary>

@@ -36,7 +36,7 @@ namespace MonitorSalaCirurgica
             });
 
             // ---- configurações lidas do appsettings.json ----
-            // Banco SQL (ConexaoBD, como no CadAluno)
+            // Banco SQL (ConexaoBD)
             ConexaoBD.StringConexao = Configuration.GetConnectionString("BancoSQL");
 
             // FIWARE: endereço da EC2, portas, fiware-service e fiware-servicepath

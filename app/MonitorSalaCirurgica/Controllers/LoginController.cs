@@ -12,7 +12,7 @@ namespace MonitorSalaCirurgica.Controllers
 
         public IActionResult FazLogin(string usuario, string senha)
         {
-            //Este é apenas um exemplo (igual ao CadAluno): aqui você deve consultar na sua tabela
+            //Login de demonstração: aqui você deve consultar os usuários na sua tabela
             //de usuários se existe esse usuário e senha
             if (usuario == "admin" && senha == "1234")
             {

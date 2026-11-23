@@ -29,7 +29,7 @@ namespace MonitorSalaCirurgica.DAO
         /// <summary>Porta do Mosquitto (só para exibir no cadastro da sala)</summary>
         public int PortaMqtt { get; set; } = 1883;
 
-        /// <summary>Proxy opcional (ex.: http://proxycefsa.cefsa.corp.local:8080, cap. 37 da apostila)</summary>
+        /// <summary>Proxy opcional (ex.: http://proxy.empresa.local:8080)</summary>
         public string Proxy { get; set; } = "";
         public int TimeoutSegundos { get; set; } = 5;
 

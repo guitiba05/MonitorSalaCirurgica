@@ -10,8 +10,8 @@ using System.Linq;
 namespace MonitorSalaCirurgica.Controllers
 {
     /// <summary>
-    /// O que todos os controllers da aplicação têm em comum: exigir login (como o PadraoController
-    /// do CadAluno), mensagens para a próxima tela e o combo de salas.
+    /// O que todos os controllers da aplicação têm em comum: exigir login, mensagens para a
+    /// próxima tela e o combo de salas.
     /// </summary>
     public class BaseController : Controller
     {
@@ -41,7 +41,7 @@ namespace MonitorSalaCirurgica.Controllers
             return erro.Message;
         }
 
-        /// <summary>Combo de salas do IoT Agent (device_id - nome), como o combo de cidades do CadAluno</summary>
+        /// <summary>Combo de salas do IoT Agent (device_id - nome), no mesmo formato de um combo de cidades</summary>
         protected void PreparaComboSalas(bool incluiTodas = false)
         {
             List<SelectListItem> lista = new List<SelectListItem>();

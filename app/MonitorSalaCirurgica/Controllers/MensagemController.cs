@@ -9,7 +9,7 @@ namespace MonitorSalaCirurgica.Controllers
 {
     /// <summary>
     /// Tela de consulta das mensagens IoT (item de 2,0 do enunciado): consulta via API ao
-    /// STH-Comet, chamada por AJAX, como a "consulta avançada" do capítulo 36 da apostila.
+    /// STH-Comet, chamada por AJAX, com filtros e paginação.
     /// </summary>
     public class MensagemController : BaseController
     {

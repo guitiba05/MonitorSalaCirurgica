@@ -1,6 +1,6 @@
 namespace MonitorSalaCirurgica.Models
 {
-    /// <summary>Base dos modelos gravados no SQL Server (igual ao CadAluno): chave numérica</summary>
+    /// <summary>Base dos modelos gravados no SQL Server : chave numérica</summary>
     public abstract class PadraoViewModel
     {
         public virtual int Id { get; set; }

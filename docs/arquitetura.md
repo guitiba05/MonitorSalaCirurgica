@@ -10,7 +10,7 @@ O sistema segue o padrão do FIWARE Made Simple: cada seta parte de quem inicia 
 | --- | --- | --- | --- |
 | IoT | Sala cirúrgica | ESP32 com DHT11 (D4), LDR (D34), LED azul (D27) e buzzer passivo (D13) | cliente MQTT → 1883 |
 | Back-end | EC2 do AWS Learner Lab, Docker (FIWARE Made Simple) | Mosquitto, IoT Agent UltraLight, Orion, STH-Comet, MongoDB de contexto (rede interna) e MongoDB de histórico (com senha) | 1883, 4041, 7896 (só testes), 1026, 8666, 27017 |
-| Aplicação | Computador da equipe | ASP.NET Core MVC 3.1 no padrão do CadAluno (telas, SupervisorService, skill da Alexa) e SQL Server / LocalDB | 5000 (local) |
+| Aplicação | Computador da equipe | ASP.NET Core MVC 3.1 em camadas (telas, SupervisorService, skill da Alexa) e SQL Server / LocalDB | 5000 (local) |
 | Interfaces | Navegador e Echo | Dashboard e telas; skill da Alexa pela nuvem da Amazon e túnel ngrok; anúncios opcionais (Voice Monkey) | HTTPS 443 |
 
 ## Dados: da medida ao gráfico

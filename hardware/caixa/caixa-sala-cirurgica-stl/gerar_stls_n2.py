@@ -1,5 +1,5 @@
 """Gera os STLs da caixa do Monitor de Sala Cirúrgica (medidas em mm).
-Base do gerador da Smart Lamp, com janela do DHT11, grade do buzzer e ventilação atrás.
+Gerador paramétrico da caixa: janela do DHT11, grade do buzzer e ventilação atrás.
 
     pip install manifold3d trimesh
     python gerar_stls.py
