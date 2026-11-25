@@ -1,6 +1,6 @@
 # Monitor de Sala Cirúrgica
 
-Projeto N2 · Sistemas Embarcados (Prof. Fábio Cabrini) e Linguagem de Programação (Prof. Eduardo Rosalém) · Engenharia de Computação · FESA
+Projeto N2 · Sistemas Embarcados (Prof. Fábio Cabrini) e Linguagem de Programação I (Prof. Eduardo Rosalém) · Engenharia de Computação · FESA
 
 > **Este documento detalha a frente de servidor.** A documentação principal — objetivo, componentes e pinagem, limites e tabela de alertas, deploy na AWS passo a passo e integrantes — está no [README.md da raiz](../README.md).
 
@@ -157,7 +157,7 @@ Procedures com nomes padronizados: `spInsert_<Tabela>`, `spUpdate_<Tabela>`, `sp
 
 ## FIWARE na AWS
 
-O FIWARE roda numa EC2 do AWS Learner Lab com o [FIWARE Descomplicado](https://github.com/fabiocabrini/fiware): Orion 3.11.0, IoT Agent UltraLight, STH-Comet, Mosquitto e dois MongoDB (contexto na rede interna e histórico com senha). O passo a passo completo do deploy, do zero, está em [`docs/deploy-learner-lab.md`](../docs/deploy-learner-lab.md).
+O FIWARE roda numa EC2 do AWS Learner Lab com o [FIWARE Descomplicado](https://github.com/fabiocabrini/fiware): Orion 3.11.0, IoT Agent UltraLight, STH-Comet, Mosquitto e dois MongoDB: o histórico, com senha, guarda as séries do STH-Comet e as entidades do Orion; o interno, só na rede do Docker, guarda o registro de dispositivos do IoT Agent. O passo a passo completo do deploy, do zero, está em [`docs/deploy-learner-lab.md`](../docs/deploy-learner-lab.md).
 
 O que a aplicação precisa da EC2:
 
@@ -194,7 +194,7 @@ Requisitos: Visual Studio 2019 ou 2022 com o **SDK do .NET Core 3.1** e o SQL Se
 5. **Cadastrar a sala**: em **Salas › Novo registro**, mantenha `sala01`, `urn:ngsi-ld:SalaCirurgica:001` e `CIRURGIA01` e deixe marcado "Criar as três inscrições". Se a sala já foi cadastrada pelo Postman, ela aparece na lista e entra na supervisão automaticamente.
 6. **Ver funcionando**: com o ESP32 ligado, o **Dashboard** mostra os valores mudando sozinhos. Provoque uma condição e o alarme dispara em até cerca de 40 s (janela de 30 s + ciclo de 10 s).
 
-Sem hardware, simule uma medida com a requisição 3.1 da coleção do FIWARE Made Simple (porta 7896), usando `k=CIRURGIA01`, `i=sala01` e o corpo `t|25|h|55|l|40`.
+Sem hardware, simule uma medida pela porta 7896 (requisição 3.1 da coleção da disciplina, ou o `curl` da seção *Sem hardware* do [README.md da raiz](../README.md)), usando `k=CIRURGIA01`, `i=sala01` e o corpo `t|25|h|55|l|40`.
 
 ## Integrantes
 
