@@ -170,7 +170,7 @@ O que a aplicação precisa da EC2:
 
 Duas diferenças do FIWARE Made Simple que a aplicação já trata:
 
-- **Inscrições em `httpCustom`**: o Orion 4 não tem mais `attrsFormat: legacy`, e o STH-Comet só entende NGSIv1. A tela Inscrições cria as inscrições no mesmo formato da requisição 2.6.
+- **Inscrições em `httpCustom`**: o STH-Comet só entende NGSIv1, e o `attrsFormat: legacy` da coleção pública, que funciona no Orion 3.11 do compose, foi removido no Orion 4.0. Com o corpo NGSIv1 montado no `httpCustom`, a inscrição funciona nas duas versões. A tela Inscrições cria as inscrições no mesmo formato da requisição 2.6.
 - **Paginação do STH-Comet**: `lastN` e `hLimit` aceitam no máximo 100. A aplicação pagina com `hOffset`.
 
 ## Alexa

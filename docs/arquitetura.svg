@@ -101,7 +101,7 @@
 
   <rect x="1000" y="460" width="160" height="72" rx="8" class="caixa"/>
   <text x="1016" y="484" class="nome">MongoDB histórico</text>
-  <text x="1016" y="503" class="sub">mongo-db-sth</text>
+  <text x="1016" y="503" class="sub">mongo-db-historical</text>
   <text x="1016" y="519" class="sub">:27017 · com senha</text>
 
   <rect x="60" y="592" width="240" height="56" rx="8" class="caixa"/>
@@ -109,8 +109,8 @@
   <text x="76" y="634" class="sub">broker MQTT · :1883</text>
 
   <rect x="420" y="592" width="240" height="56" rx="8" class="caixa"/>
-  <text x="436" y="615" class="nome">MongoDB contexto</text>
-  <text x="436" y="634" class="sub">mongo-db · só rede interna</text>
+  <text x="436" y="615" class="nome">MongoDB interno</text>
+  <text x="436" y="634" class="sub">mongo-db-internal · só rede interna</text>
 
   <!-- ================= IoT ================= -->
   <rect x="60" y="752" width="390" height="70" rx="8" class="caixa"/>
@@ -180,9 +180,14 @@
   <line x1="940" y1="496" x2="998" y2="496" class="dado" marker-end="url(#seta-dado)"/>
   <text x="969" y="488" class="rotulo" text-anchor="middle"><tspan class="num-dado">5</tspan> grava</text>
 
-  <!-- Orion -> MongoDB contexto -->
-  <line x1="540" y1="532" x2="540" y2="590" class="outra" marker-end="url(#seta-outra)"/>
-  <text x="550" y="566" class="rotulo">entidades e inscrições</text>
+  <!-- Orion -> MongoDB histórico: no docker-compose de referência o Orion usa
+       -dbhost mongo-db-historical (com senha) para entidades e inscrições -->
+  <polyline points="640,532 640,566 1080,566 1080,534" class="outra" marker-end="url(#seta-outra)"/>
+  <text x="760" y="558" class="rotulo">Orion grava entidades e inscrições</text>
+
+  <!-- IoT Agent -> MongoDB interno: registro dos grupos de serviço e dispositivos -->
+  <polyline points="260,532 260,578 390,578 390,620 418,620" class="outra" marker-end="url(#seta-outra)"/>
+  <text x="268" y="572" class="rotulo">registro dos dispositivos</text>
 
   <!-- 2 / C: IoT Agent -> Mosquitto -->
   <line x1="120" y1="532" x2="120" y2="590" class="dado" marker-end="url(#seta-dado)"/>

@@ -58,7 +58,7 @@ Diagrama em [`docs/arquitetura.svg`](docs/arquitetura.svg), com as explicações
 | Camada | Onde roda | Componentes | Portas |
 | --- | --- | --- | --- |
 | **IoT** | Sala cirúrgica | ESP32 DevKit V1: DHT11, LDR, LED RGB (só o azul), buzzer passivo | cliente MQTT → 1883 |
-| **Back-end** | EC2 do AWS Learner Lab, Docker (FIWARE Descomplicado) | Mosquitto, IoT Agent UltraLight, Orion, STH-Comet, MongoDB de contexto (rede interna) e MongoDB de histórico (com senha) | 1883, 1026, 4041, 8666, 27017, 7896 (só testes) |
+| **Back-end** | EC2 do AWS Learner Lab, Docker (FIWARE Descomplicado) | Mosquitto, IoT Agent UltraLight, Orion, STH-Comet, MongoDB histórico (com senha: STH-Comet e Orion) e MongoDB interno (só rede interna: IoT Agent) | 1883, 1026, 4041, 8666, 27017, 7896 (só testes) |
 | **Aplicação** | Computador da equipe | ASP.NET Core MVC 3.1 (telas, `SupervisorService`, skill da Alexa) e SQL Server / LocalDB | 5000 (local) |
 | **Interfaces** | Navegador e Echo | Dashboard e telas; skill da Alexa por túnel ngrok; anúncios opcionais (Voice Monkey) | HTTPS 443 |
 

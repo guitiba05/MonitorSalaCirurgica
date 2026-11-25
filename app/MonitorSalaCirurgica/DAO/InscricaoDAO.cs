@@ -9,8 +9,9 @@ namespace MonitorSalaCirurgica.DAO
     /// <summary>
     /// CRUD das inscrições (/v2/subscriptions) do Orion que alimentam o STH-Comet.
     /// O STH-Comet não busca os dados: ele recebe notificações do Orion. É preciso UMA inscrição
-    /// POR GRANDEZA (requisição 2.6 da coleção). Como o Orion 4.x não tem mais o formato "legacy",
-    /// a notificação é montada com httpCustom no formato NGSIv1 que o STH-Comet entende.
+    /// POR GRANDEZA (requisição 2.6 da coleção). O formato "legacy" (attrsFormat) ainda existe no
+    /// Orion 3.11 do docker-compose, mas foi removido no Orion 4.0; por isso a notificação é montada
+    /// com httpCustom no formato NGSIv1 que o STH-Comet entende, e funciona nas duas versões.
     /// </summary>
     public class InscricaoDAO : PadraoFiwareDAO<InscricaoViewModel>
     {

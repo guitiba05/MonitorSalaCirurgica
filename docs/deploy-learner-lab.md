@@ -8,10 +8,12 @@ Base: [FIWARE Descomplicado](https://github.com/fabiocabrini/fiware) (Prof. Fáb
 | --- | --- | --- | --- |
 | `fiware-orion` | `fiware/orion:3.11.0` | 1026 | estado atual (NGSI-v2) |
 | `fiware-iot-agent` | `fiware/iotagent-ul` | 4041 | provisionamento e tradução UltraLight → NGSI |
-| `fiware-sth-comet` | `telefonicaidot/fiware-sth-comet` | 8666 | histórico consultado pela aplicação |
-| `fiware-mosquitto` | `eclipse-mosquitto` | 1883 | broker MQTT do ESP32 |
-| `fiware-mongo-historical` | `mongo:4.4` | 27017 | séries históricas (com senha) |
-| `fiware-mongo-internal` | `mongo:4.4` | — | contexto do Orion e do IoT Agent (só rede interna) |
+| `fiware-sth-comet` | `telefonicaiot/fiware-sth-comet` | 8666 | histórico consultado pela aplicação |
+| `fiware-mosquitto` | `eclipse-mosquitto` | 1883 (e 9001, não usada) | broker MQTT do ESP32 |
+| `fiware-mongo-historical` | `mongo:4.4` | 27017 | com senha: séries do STH-Comet **e** entidades/inscrições do Orion |
+| `fiware-mongo-internal` | `mongo:4.4` | — | sem senha, só rede interna: registro de grupos e dispositivos do IoT Agent |
+
+> **Nota:** O kickoff desenha o Orion ligado a um "MongoDB de contexto" separado. No `docker-compose.yml` do repositório de referência, porém, o Orion sobe com `-dbhost mongo-db-historical` (com usuário e senha), e o `mongo-db-internal` fica só com o IoT Agent. O diagrama deste projeto ([`arquitetura.svg`](arquitetura.svg)) mostra a ligação como ela roda de fato na EC2.
 
 > **Importante:** O IP público da EC2 muda a cada sessão do Learner Lab. Não existe IP elástico na conta do laboratório. Por isso o endereço é configurável nos dois lados: `Fiware:Host` no `appsettings.json` (ou tela **Conexão**) e `MQTT_BROKER` no `secrets.h` do firmware. Anote o IP novo no início de cada sessão.
 
@@ -145,14 +147,17 @@ Há dois caminhos equivalentes. O primeiro é o do Guia (Postman, para adiantar 
 
 ### 7.1 Pelo Postman
 
-Importe `FIWARE Descomplicado.postman_collection.json` (está no repositório de referência), crie a variável de ambiente `ip` com o IP público e execute, nesta ordem:
+A numeração abaixo (0.1, 2.1, 2.3, 2.6, 3.1) é a da coleção usada na disciplina, citada no Guia dos desenvolvedores e nos comentários do código. A coleção pública do repositório de referência, `FIWARE Descomplicado.postman_collection.json`, traz as mesmas chamadas com outros nomes e usa a variável `url` para o IP:
 
-1. **Requisição 0.1 a 0.3** — health check.
-2. **Requisição 2.1 — grupo de serviço** (`POST /iot/services`).
-3. **Requisição 2.3 — dispositivo** (`POST /iot/devices`).
-4. **Requisição 2.6 — inscrição** (`POST /v2/subscriptions`), uma para cada grandeza.
+| Passo | Coleção da disciplina | Coleção pública (pasta › requisição) | Chamada |
+| --- | --- | --- | --- |
+| Health check | 0.1 a 0.3 | *IOT Agent MQTT › 1.1*, *STH-Comet › 1*, *Orion › 1.Version* | `GET :4041/iot/about`, `:8666/version`, `:1026/version` |
+| Grupo de serviço | 2.1 | *IOT Agent MQTT › 2. Provisioning a Service Group* | `POST :4041/iot/services` |
+| Dispositivo | 2.3 | *IOT Agent MQTT › 3. Provisioning a Smart Lamp* | `POST :4041/iot/devices` |
+| Inscrição | 2.6 | *STH-Comet › 2. Subscribe Luminosity* | `POST :1026/v2/subscriptions` |
+| Medida simulada | 3.1 | — (usar o `curl` da seção *Sem hardware* do README) | `POST :7896/iot/d` |
 
-Os corpos têm de ser os do **contrato** (seção *Contrato* do Guia dos desenvolvedores). É exatamente o que a aplicação envia:
+Nas duas coleções, **troque os corpos** pelos do **contrato** abaixo: os da coleção pública são da PoC Smart Lamp (apikey `TEF`, entidade `Lamp`) e não servem para a sala. Execute, nesta ordem: health check, grupo de serviço, dispositivo e uma inscrição para cada grandeza. É exatamente o que a aplicação envia:
 
 **Grupo de serviço** — `POST http://<IP>:4041/iot/services`
 
@@ -219,7 +224,7 @@ Os corpos têm de ser os do **contrato** (seção *Contrato* do Guia dos desenvo
 }
 ```
 
-> **Importante:** A URL da notificação é a interna do Docker (`http://sth-comet:8666/notify`), nunca o IP público: quem chama é o Orion, de dentro da EC2. E o formato é **`httpCustom` com JSON NGSIv1**, porque o Orion 4.x não tem mais `attrsFormat: legacy` e o STH-Comet só entende NGSIv1.
+> **Importante:** A URL da notificação é a interna do Docker (`http://sth-comet:8666/notify`), nunca o IP público: quem chama é o Orion, de dentro da EC2. E o formato é **`httpCustom` com JSON NGSIv1**, porque o STH-Comet só entende NGSIv1. A coleção pública usa `"attrsFormat": "legacy"`, que funciona no Orion 3.11 do compose, mas foi removido no Orion 4.0; montando o corpo NGSIv1 à mão no `httpCustom`, a inscrição funciona nas duas versões.
 >
 > **Uma inscrição por grandeza.** Inscrição repetida grava cada medida duas vezes no histórico e distorce as médias da supervisão.
 
